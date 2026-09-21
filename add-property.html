@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة عقار - عقارات برو</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --y: #FFD400;
+            --bg: #07080A;
+            --card: #0E0F12;
+            --b: #1E1F25
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif
+        }
+
+        body {
+            background: var(--bg);
+            color: #fff;
+            min-height: 100vh
+        }
+
+        .header {
+            height: 60px;
+            background: #08090B;
+            border-bottom: 1px solid #15161B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3%;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .header a {
+            color: #888;
+            font-size: 12px;
+            text-decoration: none
+        }
+
+        .logo {
+            color: var(--y);
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .form {
+            max-width: 620px;
+            margin: 20px auto;
+            background: var(--card);
+            border: 1px solid var(--b);
+            border-radius: 18px;
+            padding: 22px
+        }
+
+        .form h2 {
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 4px
+        }
+
+        .form p {
+            text-align: center;
+            color: #666;
+            font-size: 11px;
+            margin-bottom: 16px
+        }
+
+        label {
+            font-size: 11px;
+            color: #888;
+            display: block;
+            margin-top: 14px;
+            margin-bottom: 4px
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            background: #121316;
+            border: 1px solid var(--b);
+            border-radius: 12px;
+            padding: 12px;
+            color: #fff;
+            outline: none;
+            font-size: 13px
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--y)
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px
+        }
+
+        .upload-box {
+            border: 2px dashed #2A2B33;
+            border-radius: 14px;
+            padding: 18px;
+            text-align: center;
+            margin-top: 8px;
+            cursor: pointer;
+            background: #121316
+        }
+
+        .upload-box:hover {
+            border-color: var(--y)
+        }
+
+        #preview {
+            width: 100%;
+            height: 180px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin-top: 10px;
+            display: none;
+            border: 1px solid var(--b)
+        }
+
+        .btn {
+            width: 100%;
+            height: 48px;
+            background: var(--y);
+            color: #000;
+            border: none;
+            border-radius: 24px;
+            font-weight: 900;
+            font-size: 14px;
+            margin-top: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px
+        }
+
+        .btn:disabled {
+            opacity: .6
+        }
+
+        #msg {
+            margin-top: 14px;
+            text-align: center;
+            font-size: 12px;
+            min-height: 18px;
+            white-space: pre-wrap;
+            word-break: break-word
+        }
+
+        @media(max-width:600px) {
+            .form {
+                margin: 10px;
+                padding: 16px
+            }
+
+            .row {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <a href="index.html">← رجوع</a>
+        <div class="logo"><i class="fa-solid fa-house-chimney"></i> إضافة عقار</div>
+        <a href="profile.html" style="color:var(--y)">الملف</a>
+    </div>
+    <div class="form">
+        <h2>انشر عقارك الآن</h2>
+        <p>هيظهر مع صورتك واسمك في كل مكان</p>
+        <label>عنوان العقار *</label><input id="title" placeholder="مثال: شقة 150م سوبر لوكس">
+        <label>المدينة *</label>
+        <select id="city">
+            <option value="">اختار المدينة</option>
+            <option>القاهرة</option>
+            <option>الجيزة</option>
+            <option>الإسكندرية</option>
+            <option>المنصورة</option>
+            <option>طنطا</option>
+            <option>أسوان</option>
+            <option>الساحل الشمالي</option>
+            <option>القليوبية</option>
+        </select>
+        <label>السعر بالجنيه *</label><input id="price" type="number" placeholder="1500000">
+        <div class="row">
+            <div><label>المساحة م²</label><input id="area" type="number" placeholder="150"></div>
+            <div><label>عدد الغرف</label><input id="bedrooms" type="number" placeholder="3"></div>
+            <div><label>عدد الحمامات</label><input id="bathrooms" type="number" placeholder="2"></div>
+        </div>
+        <label>رقم الواتساب *</label><input id="phone" placeholder="2010xxxxxxxx">
+        <label>وصف العقار</label><textarea id="desc" rows="4" placeholder="اكتب تفاصيل العقار..."></textarea>
+        <label>الصورة الرئيسية</label>
+        <div class="upload-box" onclick="document.getElementById('main_image').click()">
+            <i class="fa-solid fa-cloud-arrow-up" style="color:var(--y);font-size:26px"></i>
+            <div style="font-size:12px;margin-top:6px">اضغط لاختيار صورة (اختياري في الديمو)</div>
+        </div>
+        <input id="main_image" type="file" accept="image/*" hidden onchange="showPreview(this)">
+        <img id="preview">
+        <button class="btn" id="pubBtn" onclick="publish()"><i class="fa-solid fa-rocket"></i> نشر العقار الآن</button>
+        <div id="msg"></div>
+    </div>
+    <script>
+        // ===== ديمو - بدون PocketBase - مربوط مع index.html =====
+        let previewBase64 = '';
+
+        function showPreview(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const p = document.getElementById('preview');
+                    p.src = e.target.result;
+                    p.style.display = 'block';
+                    previewBase64 = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function publish() {
+            const btn = document.getElementById('pubBtn');
+            const msg = document.getElementById('msg');
+            const title = document.getElementById('title').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const price = document.getElementById('price').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+
+            if (!title || !city || !price || !phone) {
+                msg.innerText = '❌ املى كل الحقول المطلوبة *'; msg.style.color = '#ff5a5a'; return;
+            }
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر...'; btn.disabled = true;
+
+            const user = JSON.parse(localStorage.getItem('aqar_user') || 'null') || { name: 'مالك العقار', id: 'demo_user' };
+
+            let props = JSON.parse(localStorage.getItem('aqar_properties') || '[]');
+
+            const newProp = {
+                id: Date.now() + '',
+                title: title,
+                city: city,
+                price: Number(price),
+                area: Number(document.getElementById('area').value || 120),
+                bedrooms: Number(document.getElementById('bedrooms').value || 3),
+                bathrooms: Number(document.getElementById('bathrooms').value || 2),
+                phone: phone,
+                description: document.getElementById('desc').value,
+                ownerName: user.name || 'مالك العقار',
+                ownerId: user.id || 'demo',
+                main_image: previewBase64 || `https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&random=${Date.now()}`,
+                created: new Date().toISOString()
+            };
+
+            props.unshift(newProp);
+            localStorage.setItem('aqar_properties', JSON.stringify(props));
+
+            msg.innerText = '✅ تم النشر بنجاح!'; msg.style.color = 'var(--y)';
+            setTimeout(() => location.href = `details.html?id=${newProp.id}`, 800);
+        }
+    </script>
+</body>
+
+</html>

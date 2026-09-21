@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --y: #FFD400;
+      --bg: #07080A
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif
+    }
+
+    body {
+      background: var(--bg);
+      color: #fff
+    }
+
+    .header {
+      height: 60px;
+      background: #08090B;
+      border-bottom: 1px solid #15161B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3%
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 20px auto;
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      padding: 0 12px
+    }
+
+    .main-img {
+      height: 400px;
+      background: #0E0F12;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #1E1F25
+    }
+
+    .main-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .box {
+      background: #0E0F12;
+      border: 1px solid #1E1F25;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px
+    }
+
+    .owner-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #121316;
+      border: 1px solid rgba(255, 212, 0, .3);
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer
+    }
+
+    .owner-card img {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid var(--y);
+      object-fit: cover
+    }
+
+    .btn {
+      width: 100%;
+      height: 42px;
+      border: none;
+      border-radius: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px
+    }
+
+    .btn-y {
+      background: var(--y);
+      color: #000
+    }
+
+    .btn-o {
+      background: transparent;
+      border: 1px solid var(--y);
+      color: var(--y)
+    }
+
+    @media(max-width:768px) {
+      .wrap {
+        grid-template-columns: 1fr
+      }
+
+      .main-img {
+        height: 250px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header"><a href="index.html" style="color:#888;font-size:12px">← رجوع</a>
+    <div style="color:var(--y);font-weight:900">عقارات برو</div><a href="index.html" style="font-size:12px">الرئيسية</a>
+  </div>
+  <div class="wrap">
+    <div>
+      <div class="main-img"><img id="mainImg"></div>
+      <div class="box" style="margin-top:12px">
+        <h2 id="title"></h2>
+        <div id="city" style="color:#888;font-size:12px;margin-top:6px"></div>
+        <div id="desc" style="margin-top:12px;color:#bbb;font-size:13px;line-height:1.8"></div>
+      </div>
+    </div>
+    <div>
+      <div class="box" style="text-align:center">
+        <div id="price" style="font-size:22px;font-weight:900;color:var(--y)"></div>
+        <div id="specs" style="font-size:11px;color:#888;margin-top:6px"></div><a id="waBtn" class="btn btn-y"><i
+            class="fa-brands fa-whatsapp"></i> واتساب</a><button class="btn btn-o"
+          onclick="navigator.clipboard.writeText(location.href);alert('تم نسخ الرابط')">مشاركة</button>
+      </div>
+      <div class="box">
+        <div style="font-size:11px;color:#888;margin-bottom:8px">صاحب العقار</div>
+        <div id="ownerBox">جاري التحميل...</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const PB = `http://${location.hostname}:8090`; const id = new URLSearchParams(location.search).get('id');
+    async function load() {
+      const r = await fetch(`${PB}/api/collections/properties/records/${id}?expand=owner`); const p = await r.json();
+      document.getElementById('title').innerText = p.title; document.getElementById('city').innerText = p.city || ''; document.getElementById('price').innerText = Number(p.price || 0).toLocaleString('ar-EG') + ' ج.م'; document.getElementById('specs').innerText = `${p.area || 0} م² • ${p.bedrooms || 0} غرف`; document.getElementById('desc').innerText = p.description || ''; document.getElementById('mainImg').src = p.main_image ? `${PB}/api/files/properties/${p.id}/${p.main_image}` : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c'; document.getElementById('waBtn').href = `https://wa.me/${p.phone || ''}?text=${encodeURIComponent(p.title)}`;
+      if (p.expand?.owner) { const o = p.expand.owner; const av = o.avatar ? `${PB}/api/files/users/${o.id}/${o.avatar}` : `https://i.pravatar.cc/100?u=${o.id}`; document.getElementById('ownerBox').innerHTML = `<div class="owner-card" onclick="location.href='profile.html?id=${o.id}'"><img src="${av}"><div><b>${o.name || o.username}</b><br><span style="font-size:10px;color:#888">${o.email || ''}</span></div><i class="fa-solid fa-chevron-left" style="margin-left:auto;color:var(--y)"></i></div>`; }
+    }
+    load();
+  </script>
+</body>
+
+</html>

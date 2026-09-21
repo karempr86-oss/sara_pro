@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المراسلة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --y: #FFD400;
+            --bg: #07080A;
+            --b: #1E1F25
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo'
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh
+        }
+
+        .header {
+            height: 64px;
+            background: #08090B;
+            border-bottom: 1px solid #15161B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px
+        }
+
+        .h-left {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .header img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--y);
+            object-fit: cover
+        }
+
+        .msgs {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #07080A
+        }
+
+        .msg {
+            max-width: 72%;
+            display: flex;
+            flex-direction: column
+        }
+
+        .msg.me {
+            align-self: flex-start
+        }
+
+        /* رسالتك انت شمال */
+        .msg.other {
+            align-self: flex-end
+        }
+
+        /* رسالته هو يمين */
+        .bubble {
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 13px;
+            line-height: 1.6;
+            word-break: break-word
+        }
+
+        .msg.me.bubble {
+            background: #1A1B20;
+            border: 1px solid var(--b);
+            color: #fff;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 18px
+        }
+
+        .msg.other.bubble {
+            background: var(--y);
+            color: #000;
+            font-weight: 800;
+            border-bottom-right-radius: 4px;
+            border-bottom-left-radius: 18px;
+            box-shadow: 0 0 15px rgba(255, 212, 0, .25)
+        }
+
+        .meta {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+            font-size: 9px;
+            color: #666
+        }
+
+        .msg.me.meta {
+            justify-content: flex-start
+        }
+
+        .msg.other.meta {
+            justify-content: flex-end;
+            color: #000;
+            opacity: .7
+        }
+
+        .bubble img {
+            max-width: 220px;
+            border-radius: 12px;
+            margin-top: 6px;
+            display: block
+        }
+
+        .bubble video {
+            max-width: 240px;
+            border-radius: 12px;
+            margin-top: 6px
+        }
+
+        .bubble audio {
+            width: 220px;
+            margin-top: 6px
+        }
+
+        .bar {
+            display: flex;
+            align-items: end;
+            gap: 8px;
+            padding: 10px 12px;
+            background: #08090B;
+            border-top: 1px solid var(--b)
+        }
+
+        .bar.field {
+            flex: 1;
+            background: #121316;
+            border: 1px solid var(--b);
+            border-radius: 24px;
+            display: flex;
+            align-items: end;
+            padding: 6px 12px
+        }
+
+        .bar textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            resize: none;
+            max-height: 100px;
+            font-size: 13px;
+            padding: 8px 0
+        }
+
+        .tool {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            color: #888
+        }
+
+        .send {
+            width: 46px;
+            height: 46px;
+            background: var(--y);
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            cursor: pointer
+        }
+
+        .rec.recording {
+            background: red !important;
+            color: #fff !important
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="h-left"><a href="index.html" style="color:#888"><i class="fa-solid fa-arrow-right"></i></a><img
+                id="uAvatar">
+            <h3 id="uName">...</h3>
+        </div>
+    </div>
+    <div class="msgs" id="msgs"></div>
+    <div class="bar">
+        <div class="field"><label class="tool"><i class="fa-solid fa-image"></i><input type="file" id="imgInput"
+                    accept="image/*" hidden></label><label class="tool"><i class="fa-solid fa-video"></i><input
+                    type="file" id="vidInput" accept="video/*" hidden></label>
+            <div class="tool rec" id="recBtn"><i class="fa-solid fa-microphone"></i></div><textarea id="txt" rows="1"
+                placeholder="اكتب رسالة..."></textarea>
+        </div><button class="send" onclick="sendText()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+    <script>
+        const PB = `http://${location.hostname}:8090`; const receiverId = new URLSearchParams(location.search).get('id');
+        let auth = {}; try { auth = JSON.parse(localStorage.getItem('pocketbase_auth') || '{}') } catch { } const token = auth.token || localStorage.getItem('pb_token'); const me = auth.model || JSON.parse(localStorage.getItem('pb_user') || '{}');
+        if (!me.id) location.href = 'login.html';
+        async function loadOther() { const r = await fetch(`${PB}/api/collections/users/records/${receiverId}`); const u = await r.json(); const name = u.name || u.username || u.email.split('@')[0]; const av = u.avatar ? `${PB}/api/files/users/${u.id}/${u.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD400&color=000`; document.getElementById('uName').innerText = name; document.getElementById('uAvatar').src = av; }
+        function formatTime(d) { return new Date(d).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }); }
+        function appendLocal({ text, imageUrl, videoUrl, voiceUrl, isMe }) {
+            const box = document.getElementById('msgs'); let b = ''; if (text) b += `<div>${text}</div>`; if (imageUrl) b += `<img src="${imageUrl}">`; if (videoUrl) b += `<video controls src="${videoUrl}"></video>`; if (voiceUrl) b += `<audio controls src="${voiceUrl}"></audio>`;
+            box.insertAdjacentHTML('beforeend', `<div class="msg ${isMe ? 'me' : 'other'}"><div class="bubble">${b}</div><div class="meta"><span>${formatTime(new Date())}</span></div></div>`);
+            box.scrollTop = box.scrollHeight;
+        }
+        async function loadMsgs() {
+            const filter = encodeURIComponent(`(sender="${me.id}"&&receiver="${receiverId}")||(sender="${receiverId}"&&receiver="${me.id}")`);
+            const r = await fetch(`${PB}/api/collections/messages/records?filter=${filter}&sort=created&perPage=300`, { headers: { 'Authorization': token } });
+            const d = await r.json(); const box = document.getElementById('msgs'); let html = '';
+            d.items.forEach(m => { const isMe = m.sender === me.id; let b = ''; if (m.text) b += `<div>${m.text}</div>`; if (m.image) b += `<img src="${PB}/api/files/messages/${m.id}/${m.image}">`; if (m.video) b += `<video controls src="${PB}/api/files/messages/${m.id}/${m.video}"></video>`; if (m.voice) b += `<audio controls src="${PB}/api/files/messages/${m.id}/${m.voice}"></audio>`; html += `<div class="msg ${isMe ? 'me' : 'other'}"><div class="bubble">${b}</div><div class="meta"><span>${formatTime(m.created)}</span></div></div>`; });
+            box.innerHTML = html; box.scrollTop = box.scrollHeight;
+        }
+        async function sendText() { const el = document.getElementById('txt'); const v = el.value.trim(); if (!v) return; el.value = ''; appendLocal({ text: v, isMe: true }); send({ text: v }, true); }
+        async function send(data, skip = false) {
+            if (!skip) {
+                if (data.image) appendLocal({ imageUrl: URL.createObjectURL(data.image), isMe: true });
+                if (data.video) appendLocal({ videoUrl: URL.createObjectURL(data.video), isMe: true });
+                if (data.voice) appendLocal({ voiceUrl: URL.createObjectURL(data.voice), isMe: true });
+            }
+            const fd = new FormData(); fd.append('sender', me.id); fd.append('receiver', receiverId); fd.append('read', false);
+            if (data.text) fd.append('text', data.text); if (data.image) fd.append('image', data.image); if (data.video) fd.append('video', data.video); if (data.voice) fd.append('voice', data.voice);
+            await fetch(`${PB}/api/collections/messages/records`, { method: 'POST', headers: { 'Authorization': token }, body: fd }); loadMsgs();
+        }
+        document.getElementById('imgInput').addEventListener('change', e => { if (e.target.files[0]) send({ image: e.target.files[0] }) });
+        document.getElementById('vidInput').addEventListener('change', e => { if (e.target.files[0]) send({ video: e.target.files[0] }) });
+        let rec = null, chunks = [], isRec = false;
+        document.getElementById('recBtn').addEventListener('click', async () => {
+            if (!isRec) { const s = await navigator.mediaDevices.getUserMedia({ audio: true }); rec = new MediaRecorder(s); chunks = []; rec.ondataavailable = e => chunks.push(e.data); rec.onstop = () => { const blob = new Blob(chunks, { type: 'audio/webm' }); send({ voice: blob }); }; rec.start(); isRec = true; document.getElementById('recBtn').classList.add('recording'); }
+            else { rec.stop(); isRec = false; document.getElementById('recBtn').classList.remove('recording'); }
+        });
+        document.getElementById('txt').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendText(); } });
+        loadOther().then(loadMsgs); setInterval(() => loadMsgs(), 3000);
+    </script>
+</body>
+
+</html>

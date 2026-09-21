@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --y: #FFD400;
+            --bg: #07080A;
+            --b: #1E1F25;
+            --card: #0E0F12
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Cairo'
+        }
+
+        body {
+            background: var(--bg);
+            color: #fff
+        }
+
+        .header {
+            height: 64px;
+            background: #08090B;
+            border-bottom: 1px solid #15161B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 3%;
+            position: sticky;
+            top: 0;
+            z-index: 10
+        }
+
+        .logo {
+            color: var(--y);
+            font-weight: 900
+        }
+
+        .wrap {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 16px
+        }
+
+        .head {
+            background: var(--card);
+            border: 1px solid var(--b);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            align-items: center
+        }
+
+        .head img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 2px solid var(--y);
+            object-fit: cover
+        }
+
+        .btn-y {
+            background: var(--y);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer
+        }
+
+        .btn-o {
+            border: 1px solid var(--y);
+            color: var(--y);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: transparent;
+            cursor: pointer
+        }
+
+        .edit-box {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        .edit-box input {
+            background: #121316;
+            border: 1px solid var(--b);
+            border-radius: 20px;
+            padding: 6px 12px;
+            color: #fff;
+            outline: none;
+            font-size: 12px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px
+        }
+
+        .pc {
+            background: #121316;
+            border: 1px solid var(--b);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer
+        }
+
+        .pc img {
+            width: 100%;
+            height: 130px;
+            object-fit: cover
+        }
+
+        @media(max-width:768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .head {
+                flex-direction: column;
+                text-align: center
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header"><a href="index.html" style="color:#888;font-size:12px">← الرئيسية</a>
+        <div class="logo">عقارات برو</div>
+        <div></div>
+    </div>
+    <div class="wrap">
+        <div class="head" id="head">جاري التحميل...</div>
+        <h3 style="margin-top:20px;font-weight:900">عقاراته (<span id="cnt">0</span>)</h3>
+        <div class="grid" id="grid"></div>
+    </div>
+    <script>const PB = `http://${location.hostname}:8090`; const qId = new URLSearchParams(location.search).get('id'); let auth = {}; try { auth = JSON.parse(localStorage.getItem('pocketbase_auth') || '{}') } catch { } const token = auth.token || localStorage.getItem('pb_token'); let me = auth.model || {}; try { if (!me.id) me = JSON.parse(localStorage.getItem('pb_user') || '{}') } catch { } const target = qId || me.id; async function load() { if (!target) { document.getElementById('head').innerHTML = 'سجل دخول <a href="login.html" style="color:var(--y)">دخول</a>'; return } const r = await fetch(`${PB}/api/collections/users/records/${target}`); const u = await r.json(); const name = u.name || u.username || u.email.split('@')[0]; const av = u.avatar ? `${PB}/api/files/users/${u.id}/${u.avatar}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD400&color=000&size=80`; const isMe = me.id === u.id; document.getElementById('head').innerHTML = `<img src="${av}"><div style="flex:1"><h2 id="nameTxt" style="font-weight:900">${name}</h2><p style="color:#888;font-size:11px">${u.email || ''}</p>${isMe ? `<div class="edit-box"><input id="newName" value="${name}" placeholder="الاسم الجديد"><button class="btn-y" onclick="updateName()">حفظ الاسم</button></div><label class="btn-o" style="margin-top:8px;display:inline-block;cursor:pointer"><i class="fa-solid fa-camera"></i> تغيير الصورة<input type="file" hidden id="avFile" accept="image/*" onchange="updateAvatar(this)"></label>` : `<div style="margin-top:12px;display:flex;gap:8px"><button class="btn-y" onclick="location.href='chat.html?id=${u.id}'"><i class="fa-solid fa-paper-plane"></i> مراسلة</button><a href="https://wa.me/${u.phone || ''}" class="btn-o">واتساب</a></div>`}<div style="margin-top:8px;color:#888;font-size:11px"><b id="pc" style="color:#fff">0</b> عقار</div></div>`; const r2 = await fetch(`${PB}/api/collections/properties/records?filter=owner="${u.id}"&perPage=100&sort=-created`); const d2 = await r2.json(); document.getElementById('cnt').innerText = d2.items.length; const pc = document.getElementById('pc'); if (pc) pc.innerText = d2.items.length; document.getElementById('grid').innerHTML = d2.items.map(p => { const img = p.main_image ? `${PB}/api/files/properties/${p.id}/${p.main_image}` : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c'; return `<div class="pc" onclick="location.href='details.html?id=${p.id}'"><img src="${img}"><div style="padding:8px;text-align:center;font-size:12px">${p.title || 'عقار'}</div></div>` }).join(''); } async function updateName() { const nn = document.getElementById('newName').value.trim(); if (!nn) return; const fd = new FormData(); fd.append('name', nn); const res = await fetch(`${PB}/api/collections/users/records/${me.id}`, { method: 'PATCH', headers: { 'Authorization': token }, body: fd }); if (res.ok) { const data = await res.json(); localStorage.setItem('pb_user', JSON.stringify(data)); auth.model = data; localStorage.setItem('pocketbase_auth', JSON.stringify(auth)); alert('تم تغيير الاسم'); location.reload(); } } async function updateAvatar(inp) { if (!inp.files[0]) return; const fd = new FormData(); fd.append('avatar', inp.files[0]); const res = await fetch(`${PB}/api/collections/users/records/${me.id}`, { method: 'PATCH', headers: { 'Authorization': token }, body: fd }); if (res.ok) location.reload(); } load();</script>
+</body>
+
+</html>
