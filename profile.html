@@ -1,43 +1,49 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>الملف الشخصي - عقارات برو</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{--y:#FFD400;--bg:#07080A;--b:#1E1F25;--card:#0E0F12}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo'}
-body{background:var(--bg);color:#fff}
-.header{height:64px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 3%;position:sticky;top:0;z-index:10}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo';-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:#fff;padding-bottom:80px}
+.header{height:60px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:10}
 .logo{color:var(--y);font-weight:900}
-.wrap{max-width:900px;margin:20px auto;padding:0 16px}
-.head{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:20px;display:flex;gap:16px;align-items:center}
-.head img{width:90px;height:90px;border-radius:50%;border:2px solid var(--y);object-fit:cover}
-.btn-y{background:var(--y);color:#000;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:800;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.btn-o{border:1px solid var(--y);color:var(--y);padding:8px 16px;border-radius:20px;font-size:12px;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.edit-box{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.edit-box input{background:#121316;border:1px solid var(--b);border-radius:20px;padding:8px 12px;color:#fff;outline:none;font-size:12px;min-width:180px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
-.pc{background:#121316;border:1px solid var(--b);border-radius:12px;overflow:hidden;cursor:pointer;transition:.3s}
-.pc:hover{border-color:var(--y)}
-.pc img{width:100%;height:130px;object-fit:cover}
-@media(max-width:768px){.grid{grid-template-columns:1fr 1fr}.head{flex-direction:column;text-align:center}}
+.wrap{max-width:900px;margin:0 auto;padding:12px}
+.head{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:18px;display:flex;gap:16px;align-items:center}
+.head img{width:80px;height:80px;border-radius:50%;border:2px solid var(--y);object-fit:cover;flex-shrink:0}
+.btn-y{background:var(--y);color:#000;padding:10px 16px;border-radius:22px;font-size:12px;font-weight:800;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:42px}
+.btn-o{border:1px solid var(--y);color:var(--y);padding:10px 16px;border-radius:22px;font-size:12px;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:42px}
+.edit-box{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.edit-box input{background:#121316;border:1px solid var(--b);border-radius:22px;padding:10px 14px;color:#fff;outline:none;font-size:12px;min-width:180px;flex:1;min-height:42px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.pc{background:#121316;border:1px solid var(--b);border-radius:14px;overflow:hidden;transition:.2s}
+.pc:active{transform:scale(.97)}
+.pc img{width:100%;height:140px;object-fit:cover}
+@media(max-width:768px){
+ .head{flex-direction:column;text-align:center;padding:20px 16px}
+ .head>div{width:100%}
+ .edit-box{flex-direction:column}
+ .grid{grid-template-columns:1fr 1fr}
+ .pc img{height:130px}
+}
+@media(max-width:480px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="header"><a href="index.html" style="color:#888;font-size:12px;text-decoration:none">← الرئيسية</a><div class="logo">عقارات برو</div><div></div></div>
+<div class="header"><a href="index.html" style="color:#888;font-size:12px;text-decoration:none"><i class="fa-solid fa-house"></i> الرئيسية</a><div class="logo">ملفي</div><button onclick="logout()" style="background:transparent;border:none;color:#666;font-size:11px">خروج</button></div>
 <div class="wrap">
-<div class="head" id="head">جاري التحميل من Firebase...</div>
-<h3 style="margin-top:20px;font-weight:900">عقاراته (<span id="cnt">0</span>)</h3>
+<div class="head" id="head">جاري التحميل...</div>
+<h3 style="margin-top:20px;font-weight:900;display:flex;justify-content:space-between;align-items:center">عقاراته (<span id="cnt">0</span>) <a href="add-property.html" style="background:var(--y);color:#000;padding:6px 12px;border-radius:18px;font-size:11px">+ إضافة</a></h3>
 <div class="grid" id="grid"></div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",
   authDomain: "hack1-cb0f2.firebaseapp.com",
@@ -47,162 +53,90 @@ const firebaseConfig = {
   appId: "1:926645598259:web:eabe7d3f588ee0b26f0b46"
 };
 const IMGBB_KEY = "4db587bdabc9b335c341251460d0d6e2";
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 const qId = new URLSearchParams(location.search).get('id');
-const headEl = document.getElementById('head');
-const gridEl = document.getElementById('grid');
+let currentUser=null; let targetUid=qId;
+const headEl=document.getElementById('head'); const gridEl=document.getElementById('grid');
 
-let currentUser = null;
-let targetUid = qId;
-
-onAuthStateChanged(auth, async user=>{
-  currentUser = user;
-  if(!targetUid) targetUid = user?.uid;
-  if(!targetUid){
-    headEl.innerHTML=`مش مسجل دخول <a href="login.html" style="color:var(--y)">دخول</a>`;
-    return;
-  }
+onAuthStateChanged(auth, user=>{
+  currentUser=user;
+  if(!targetUid) targetUid=user?.uid;
+  if(!targetUid){ headEl.innerHTML=`مش مسجل دخول <a href="login.html" style="color:var(--y)">دخول</a>`; return; }
   loadProfile(targetUid);
 });
 
 async function uploadToImgBB(file){
-  const fd = new FormData(); fd.append("image", file);
-  const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {method:"POST", body:fd});
-  const data = await res.json();
-  if(!data.success) throw new Error("فشل رفع الصورة");
-  return data.data.url;
+  const fd=new FormData(); fd.append("image",file);
+  const res=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:"POST",body:fd});
+  const data=await res.json(); if(!data.success) throw new Error("فشل رفع الصورة"); return data.data.url;
 }
 
 async function loadProfile(uid){
   try{
-    // حاول تجيب بيانات من properties اول مرة شافها فيها (عشان لو بروفايل حد تاني)
-    let name = "مستخدم", email = "", photo = "";
-    let isMe = currentUser && currentUser.uid === uid;
-
-    if(isMe){
-      name = currentUser.displayName || currentUser.email.split('@')[0];
-      email = currentUser.email;
-      photo = currentUser.photoURL;
-    } else {
-      // لو بتشوف حد تاني، جيب اول عقار ليه واعرف اسمه منه
-      const q = query(collection(db,"properties"), where("ownerId","==",uid));
-      const snap = await getDocs(q);
-      if(!snap.empty){
-        const first = snap.docs[0].data();
-        name = first.ownerName || name;
-        photo = first.ownerPhoto || "";
-        email = first.ownerEmail || "";
-      }
+    let name="مستخدم", email="", photo="", isMe=currentUser && currentUser.uid===uid;
+    if(isMe){ name=currentUser.displayName||currentUser.email.split('@')[0]; email=currentUser.email; photo=currentUser.photoURL; }
+    else{
+      const q=query(collection(db,"properties"),where("ownerId","==",uid));
+      const snap=await getDocs(q);
+      if(!snap.empty){ const f=snap.docs[0].data(); name=f.ownerName||name; photo=f.ownerPhoto||""; email=f.ownerEmail||""; }
     }
-
-    const av = photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD400&color=000&size=80`;
-
-    headEl.innerHTML = `
-      <img id="avatarImg" src="${av}">
+    const av=photo||`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD400&color=000&size=80`;
+    headEl.innerHTML=`
+      <img src="${av}">
       <div style="flex:1">
-        <h2 id="nameTxt" style="font-weight:900">${name}</h2>
-        <p style="color:#888;font-size:11px">${email}</p>
-        ${isMe? `
+        <h2 style="font-weight:900">${name}</h2>
+        <p style="color:#888;font-size:11px;margin-top:2px">${email}</p>
+        ${isMe?`
           <div class="edit-box">
             <input id="newName" value="${name}" placeholder="الاسم الجديد">
-            <button class="btn-y" id="saveNameBtn"><i class="fa-solid fa-check"></i> حفظ الاسم</button>
+            <button class="btn-y" id="saveNameBtn"><i class="fa-solid fa-check"></i> حفظ</button>
           </div>
-          <label class="btn-o" style="margin-top:8px;cursor:pointer">
-            <i class="fa-solid fa-camera"></i> تغيير صورة الملف الشخصي
+          <label class="btn-o" style="margin-top:10px;width:100%;justify-content:center">
+            <i class="fa-solid fa-camera"></i> تغيير الصورة
             <input type="file" hidden id="avFile" accept="image/*">
           </label>
-          <div style="margin-top:10px;color:#666;font-size:10px">الصورة هتترفع على ImgBB ببلاش وتتحدث في كل عقاراتك</div>
-        ` : `
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-y" onclick="goChat('${uid}')"><i class="fa-solid fa-paper-plane"></i> مراسلة</button>
-            <a href="https://wa.me/" target="_blank" class="btn-o"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
-          </div>
-        `}
-        <div style="margin-top:8px;color:#888;font-size:11px"><b id="pc" style="color:#fff">0</b> عقار منشور</div>
+        `:`<div style="margin-top:12px"><button class="btn-y" style="width:100%;justify-content:center" onclick="location.href='https://wa.me/'"><i class="fa-solid fa-paper-plane"></i> مراسلة</button></div>`}
+        <div style="margin-top:10px;color:#888;font-size:11px"><b id="pc" style="color:#fff">0</b> عقار منشور</div>
       </div>
     `;
-
     if(isMe){
       document.getElementById('saveNameBtn').addEventListener('click', updateName);
-      document.getElementById('avFile').addEventListener('change', (e)=> updateAvatar(e.target));
+      document.getElementById('avFile').addEventListener('change', e=> updateAvatar(e.target));
     }
-
-    // جيب عقاراته
-    const r2 = query(collection(db,"properties"), where("ownerId","==",uid));
-    const d2 = await getDocs(r2);
-    document.getElementById('cnt').innerText = d2.size;
-    const pcEl = document.getElementById('pc');
-    if(pcEl) pcEl.innerText = d2.size;
-
-    if(d2.empty){
-      gridEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#666;padding:20px">لا يوجد عقارات</div>';
-      return;
-    }
-
-    gridEl.innerHTML = d2.docs.map(d=>{
-      const p = d.data();
-      const img = p.imageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
+    const r2=query(collection(db,"properties"),where("ownerId","==",uid));
+    const d2=await getDocs(r2);
+    document.getElementById('cnt').innerText=d2.size;
+    const pcEl=document.getElementById('pc'); if(pcEl) pcEl.innerText=d2.size;
+    if(d2.empty){ gridEl.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#666;padding:30px">لا يوجد عقارات<br><a href="add-property.html" style="color:var(--y)">+ أضف أول عقار</a></div>'; return; }
+    gridEl.innerHTML=d2.docs.map(d=>{
+      const p=d.data(); const img=p.imageUrl||'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
       return `<div class="pc" onclick="location.href='details.html?id=${d.id}'">
-        <img src="${img}"><div style="padding:8px;text-align:center;font-size:12px">${p.title||'عقار'}</div>
-        ${isMe? `<div style="padding:6px;text-align:center"><button onclick="event.stopPropagation();delProp('${d.id}')" style="background:#ff44441a;color:#f55;border:none;padding:4px 10px;border-radius:12px;font-size:10px;cursor:pointer">حذف</button></div>`:``}
-      </div>`;
+        <img src="${img}"><div style="padding:10px;text-align:center"><div style="font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title||'عقار'}</div><div style="font-size:11px;color:var(--y);margin-top:4px">${Number(p.price||0).toLocaleString()} ج.م</div>
+        ${isMe?`<button onclick="event.stopPropagation();delProp('${d.id}')" style="margin-top:8px;background:#ff44441a;color:#f55;border:none;padding:6px 12px;border-radius:14px;font-size:10px;width:100%">حذف</button>`:``}
+        </div></div>`;
     }).join('');
-
-  }catch(e){
-    headEl.innerHTML=`<span style="color:#f55">خطأ: ${e.message}</span>`;
-    console.error(e);
-  }
+  }catch(e){ headEl.innerHTML=`<span style="color:#f55">خطأ: ${e.message}</span>`; }
 }
-
-window.updateName = async ()=>{
-  const nn = document.getElementById('newName').value.trim();
-  if(!nn) return alert('اكتب الاسم');
-  if(!currentUser) return alert('سجل دخول تاني');
-  try{
-    await updateProfile(currentUser, {displayName: nn});
-    // حدث كل عقاراته
-    const q = query(collection(db,"properties"), where("ownerId","==",currentUser.uid));
-    const snap = await getDocs(q);
-    for(const d of snap.docs){
-      await updateDoc(doc(db,"properties",d.id), {ownerName: nn});
-    }
-    document.getElementById('nameTxt').innerText = nn;
-    alert('✅ تم تغيير الاسم في كل عقاراتك');
-    location.reload();
-  }catch(e){ alert('فشل: '+e.message); }
+window.updateName=async()=>{
+  const nn=document.getElementById('newName').value.trim(); if(!nn) return alert('اكتب الاسم');
+  try{ await updateProfile(currentUser,{displayName:nn});
+    const q=query(collection(db,"properties"),where("ownerId","==",currentUser.uid)); const snap=await getDocs(q);
+    for(const d of snap.docs) await updateDoc(doc(db,"properties",d.id),{ownerName:nn});
+    alert('✅ تم التحديث'); location.reload();
+  }catch(e){ alert(e.message); }
 };
-
-window.updateAvatar = async (inp)=>{
-  if(!inp.files[0]) return;
-  if(!currentUser) return alert('سجل دخول تاني');
-  headEl.innerHTML += '<p style="color:var(--y);font-size:11px;margin-top:8px">جاري رفع الصورة على ImgBB...</p>';
-  try{
-    const url = await uploadToImgBB(inp.files[0]);
-    await updateProfile(currentUser, {photoURL: url});
-    const q = query(collection(db,"properties"), where("ownerId","==",currentUser.uid));
-    const snap = await getDocs(q);
-    for(const d of snap.docs){
-      await updateDoc(doc(db,"properties",d.id), {ownerPhoto: url});
-    }
-    alert('✅ تم تغيير الصورة');
-    location.reload();
-  }catch(e){ alert('فشل: '+e.message); }
+window.updateAvatar=async(inp)=>{
+  if(!inp.files[0]) return; headEl.innerHTML+='<p style="color:var(--y);font-size:11px">جاري الرفع...</p>';
+  try{ const url=await uploadToImgBB(inp.files[0]); await updateProfile(currentUser,{photoURL:url});
+    const q=query(collection(db,"properties"),where("ownerId","==",currentUser.uid)); const snap=await getDocs(q);
+    for(const d of snap.docs) await updateDoc(doc(db,"properties",d.id),{ownerPhoto:url});
+    alert('✅ تم تغيير الصورة'); location.reload();
+  }catch(e){ alert(e.message); }
 };
-
-window.delProp = async (id)=>{
-  if(!confirm('تمسح العقار؟')) return;
-  await deleteDoc(doc(db,"properties",id));
-  alert('تم المسح'); loadProfile(targetUid);
-};
-
-window.goChat = (uid)=>{
-  localStorage.setItem('chat_target', uid);
-  location.href=`chat.html?id=${encodeURIComponent(uid)}`;
-};
+window.delProp=async(id)=>{ if(!confirm('تمسح؟')) return; await deleteDoc(doc(db,"properties",id)); location.reload(); };
+window.logout=async()=>{ await signOut(auth); localStorage.clear(); location.href='index.html'; };
 </script>
 </body>
 </html>
