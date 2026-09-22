@@ -1,198 +1,149 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دخول</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --y: #FFD400;
-            --bg: #07080A;
-            --c: #0E0F12;
-            --b: #1E1F25
-        }
-
-        * {
-            box-sizing: border-box;
-            font-family: 'Cairo'
-        }
-
-        body {
-            background: var(--bg);
-            color: #fff;
-            display: grid;
-            place-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 16px
-        }
-
-        .box {
-            background: var(--c);
-            border: 1px solid rgba(255, 212, 0, .25);
-            border-radius: 14px;
-            padding: 28px;
-            width: 100%;
-            max-width: 380px
-        }
-
-        input {
-            width: 100%;
-            height: 46px;
-            background: #08090A;
-            border: 1px solid var(--b);
-            border-radius: 22px;
-            padding: 0 16px;
-            color: #fff;
-            outline: none;
-            margin-top: 12px;
-            font-size: 12px
-        }
-
-        button {
-            width: 100%;
-            height: 46px;
-            border-radius: 22px;
-            border: none;
-            font-weight: 900;
-            cursor: pointer;
-            margin-top: 14px;
-            background: var(--y);
-            color: #000
-        }
-
-        .link {
-            color: var(--y);
-            font-size: 11px;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-top: 10px;
-            display: inline-block
-        }
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .85);
-            display: none;
-            place-items: center;
-            z-index: 99;
-            padding: 16px
-        }
-
-        .modal.show {
-            display: grid
-        }
-
-        .otp {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 14px;
-            direction: ltr
-        }
-
-        .otp input {
-            width: 42px;
-            height: 48px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 900;
-            padding: 0
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دخول - عقارات برو</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--y:#FFD400;--bg:#07080A;--c:#0E0F12;--b:#1E1F25}
+*{box-sizing:border-box;font-family:'Cairo'}
+body{background:var(--bg);color:#fff;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px}
+.box{background:var(--c);border:1px solid rgba(255,212,0,.25);border-radius:14px;padding:28px;width:100%;max-width:380px}
+input{width:100%;height:46px;background:#08090A;border:1px solid var(--b);border-radius:22px;padding:0 16px;color:#fff;outline:none;margin-top:12px;font-size:12px}
+button{width:100%;height:46px;border-radius:22px;border:none;font-weight:900;cursor:pointer;margin-top:14px;background:var(--y);color:#000}
+button:disabled{opacity:.6}
+.link{color:var(--y);font-size:11px;cursor:pointer;text-decoration:underline;margin-top:10px;display:inline-block}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;place-items:center;z-index:99;padding:16px}
+.modal.show{display:grid}
+.google-btn{background:#fff;color:#000;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #ddd;margin-top:12px}
+.google-btn img{width:20px}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:#666;font-size:11px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#1E1F25}
+</style>
 </head>
-
 <body>
-    <div class="box">
-        <div style="color:var(--y);font-weight:900;font-size:20px">عقارات برو</div>
-        <h2 style="margin-top:10px">تسجيل الدخول</h2>
-        <input id="email" placeholder="الإيميل"><input id="pass" type="password" placeholder="الباسورد">
-        <button onclick="login()" id="b">دخول</button>
-        <p id="m" style="font-size:11px;text-align:center;margin-top:8px"></p>
-        <div style="text-align:center"><span class="link" onclick="openF()">نسيت كلمة السر؟</span></div>
-        <p style="text-align:center;font-size:11px;color:#666;margin-top:12px">معندكش حساب؟ <a href="register.html"
-                style="color:var(--y)">إنشاء حساب</a></p>
-    </div>
+<div class="box">
+<div style="color:var(--y);font-weight:900;font-size:20px">عقارات برو</div>
+<h2 style="margin-top:10px">تسجيل الدخول</h2>
 
-    <div class="modal" id="forgotModal">
-        <div class="box">
-            <h3>استعادة الحساب</h3>
-            <div id="step1"><input id="fEmail" placeholder="اكتب ايميلك"><button onclick="sendCode()" id="sendBtn">إرسال
-                    كود المصادقة</button>
-                <p id="fMsg" style="font-size:11px;text-align:center;margin-top:8px;color:#f55"></p>
-            </div>
-            <div id="step2" style="display:none">
-                <p id="sentText" style="font-size:12px;color:var(--y);text-align:center;margin-top:10px"></p>
-                <div class="otp"><input maxlength="1" id="o1" oninput="mv(this,2)"><input maxlength="1" id="o2"
-                        oninput="mv(this,3)"><input maxlength="1" id="o3" oninput="mv(this,4)"><input maxlength="1"
-                        id="o4" oninput="mv(this,5)"><input maxlength="1" id="o5" oninput="mv(this,6)"><input
-                        maxlength="1" id="o6" oninput="mv(this,7)"></div>
-                <input type="hidden" id="otpId"><input id="newPass" type="password"
-                    placeholder="باسورد جديد (اختياري)"><button onclick="verifyCode()" id="verifyBtn">دخول
-                    بالكود</button>
-                <p id="fMsg2" style="font-size:11px;text-align:center;margin-top:8px"></p>
-            </div>
-            <div style="text-align:center;margin-top:12px"><span class="link" style="color:#888"
-                    onclick="closeF()">إغلاق</span></div>
-        </div>
-    </div>
-    
-<script>
-        const PB = `http://${location.hostname}:8090`;
-        async function login() { b.disabled = true; b.innerText = 'جاري...'; try { const r = await fetch(`${PB}/api/collections/users/auth-with-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ identity: email.value, password: pass.value }) }); if (!r.ok) throw ''; const d = await r.json(); localStorage.setItem('pocketbase_auth', JSON.stringify(d)); localStorage.setItem('pb_token', d.token); localStorage.setItem('pb_user', JSON.stringify(d.record)); location.href = 'index.html' } catch { m.style.color = '#f55'; m.innerText = 'بيانات غلط'; b.disabled = false; b.innerText = 'دخول' } }
-        function openF() { document.getElementById('forgotModal').classList.add('show') } function closeF() { document.getElementById('forgotModal').classList.remove('show') }
-        
-        function mv(el, n) { 
-            if (el.value && document.getElementById('o' + n)) document.getElementById('o' + n).focus(); 
-            let c = ''; for (let i = 1; i <= 6; i++)c += document.getElementById('o' + i).value; 
-            if (c.length === 6) verifyCode();
-        }
+<input id="email" placeholder="الإيميل">
+<input id="pass" type="password" placeholder="الباسورد">
+<button onclick="login()" id="b">دخول</button>
 
-        async function sendCode() { 
-            const em = fEmail.value.trim(); 
-            if (!em) { fMsg.innerText = 'اكتب الايميل'; return } 
-            sendBtn.disabled = true; sendBtn.innerText = 'جاري الارسال...'; fMsg.innerText='';
-            try { 
-                const r = await fetch(`${PB}/api/collections/users/request-otp`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: em }) }); 
-                const d = await r.json(); 
-                if (!r.ok) throw d.message; 
-                console.log("otpId:", d.otpId); // هتشوفه في F12
-                otpId.value = d.otpId; 
-                step1.style.display = 'none'; step2.style.display = 'block'; 
-                sentText.innerText = `لقد تم ارسال كود المصادقة الي البريد الالكتروني ${em}`; 
-                // فضي الخانات القديمة
-                for(let i=1;i<=6;i++) document.getElementById('o'+i).value='';
-                o1.focus() 
-            } catch (e) { fMsg.innerText = 'الايميل مش موجود'; console.log(e) } 
-            sendBtn.disabled = false; sendBtn.innerText = 'إرسال كود المصادقة' 
-        }
+<div class="divider">أو</div>
 
-        async function verifyCode() { 
-            let code = ''; for (let i = 1; i <= 6; i++) code += document.getElementById('o' + i).value; 
-            code = code.trim();
-            if (code.length !== 6) { fMsg2.innerText = 'اكتب الكود كامل'; return } 
-            verifyBtn.disabled = true; verifyBtn.innerText = 'جاري التحقق...'; 
-            fMsg2.innerText = '';
-            try { 
-                console.log("بجرب كود:", code, "مع otpId:", otpId.value);
-                const r = await fetch(`${PB}/api/collections/users/auth-with-otp`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ otpId: otpId.value.trim(), code: code }) }); 
-                const d = await r.json(); 
-                if (!r.ok) { console.log("رد السيرفر:", d); throw ''; }
-                
-                localStorage.setItem('pocketbase_auth', JSON.stringify(d)); 
-                localStorage.setItem('pb_token', d.token); 
-                localStorage.setItem('pb_user', JSON.stringify(d.record)); 
-                fMsg2.style.color = '#0f0'; fMsg2.innerText = 'تم بنجاح - جاري الدخول'; 
-                setTimeout(() => location.href = 'index.html', 800) 
-            } catch { 
-                fMsg2.style.color = '#f55'; fMsg2.innerText = 'الكود غلط او انتهى - اطلب كود جديد'; 
-                verifyBtn.disabled = false; verifyBtn.innerText = 'دخول بالكود' 
-            } 
-        }
-    </script>
-   
+<button class="google-btn" onclick="loginGoogle()" id="gBtn">
+<img src="https://www.svgrepo.com/show/475656/google-color.svg"> دخول بجوجل
+</button>
 
+<p id="m" style="font-size:11px;text-align:center;margin-top:8px"></p>
+<div style="text-align:center"><span class="link" onclick="openF()">نسيت كلمة السر؟</span></div>
+<p style="text-align:center;font-size:11px;color:#666;margin-top:12px">معندكش حساب؟ <a href="register.html" style="color:var(--y)">إنشاء حساب</a></p>
+</div>
+
+<div class="modal" id="forgotModal">
+<div class="box">
+<h3>استعادة الحساب</h3>
+<div id="step1">
+<input id="fEmail" placeholder="اكتب ايميلك">
+<button onclick="sendReset()" id="sendBtn">إرسال رابط الاستعادة</button>
+<p id="fMsg" style="font-size:11px;text-align:center;margin-top:8px;color:#f55"></p>
+</div>
+<div id="step2" style="display:none">
+<p style="font-size:12px;color:var(--y);text-align:center;margin-top:10px">تم ارسال رابط الاستعادة لبريدك، افتح ايميلك</p>
+<p id="fMsg2" style="font-size:11px;text-align:center;margin-top:8px;color:#0f0"></p>
+</div>
+<div style="text-align:center;margin-top:12px"><span class="link" style="color:#888" onclick="closeF()">إغلاق</span></div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",
+  authDomain: "hack1-cb0f2.firebaseapp.com",
+  projectId: "hack1-cb0f2",
+  storageBucket: "hack1-cb0f2.firebasestorage.app",
+  messagingSenderId: "926645598259",
+  appId: "1:926645598259:web:eabe7d3f588ee0b26f0b46",
+  measurementId: "G-0ESMXPYWXC"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+// لو مسجل دخول قبل كده يدخل مباشر
+onAuthStateChanged(auth, (user)=>{
+  if(user){
+    localStorage.setItem('user', JSON.stringify({uid:user.uid,email:user.email,name:user.displayName,photo:user.photoURL}));
+    // لو انت في صفحة الوجين وهو مسجل، وديه على الرئيسية
+    // location.href='index.html';
+  }
+});
+
+window.login = async ()=>{
+  const b=document.getElementById('b'), m=document.getElementById('m');
+  const email=document.getElementById('email').value.trim();
+  const pass=document.getElementById('pass').value.trim();
+  if(!email||!pass){m.style.color='#f55'; m.innerText='اكتب الايميل والباسورد'; return;}
+  b.disabled=true; b.innerText='جاري...'; m.innerText='';
+  try{
+    const cred = await signInWithEmailAndPassword(auth,email,pass);
+    localStorage.setItem('user', JSON.stringify({uid:cred.user.uid,email:cred.user.email,name:cred.user.displayName}));
+    localStorage.setItem('firebase_token', await cred.user.getIdToken());
+    m.style.color='#0f0'; m.innerText='تم بنجاح';
+    setTimeout(()=> location.href='index.html', 600);
+  }catch(e){
+    m.style.color='#f55';
+    if(e.code==='auth/invalid-credential') m.innerText='بيانات غلط';
+    else if(e.code==='auth/user-not-found') m.innerText='الايميل مش موجود';
+    else if(e.code==='auth/wrong-password') m.innerText='الباسورد غلط';
+    else m.innerText=e.message;
+    b.disabled=false; b.innerText='دخول';
+  }
+};
+
+window.loginGoogle = async ()=>{
+  const gBtn=document.getElementById('gBtn'), m=document.getElementById('m');
+  gBtn.disabled=true; gBtn.innerHTML='جاري...';
+  try{
+    const result = await signInWithPopup(auth, provider);
+    const user=result.user;
+    localStorage.setItem('user', JSON.stringify({uid:user.uid,email:user.email,name:user.displayName,photo:user.photoURL}));
+    localStorage.setItem('firebase_token', await user.getIdToken());
+    m.style.color='#0f0'; m.innerText='تم الدخول بجوجل';
+    setTimeout(()=> location.href='index.html', 600);
+  }catch(e){
+    m.style.color='#f55'; m.innerText='فشل الدخول بجوجل: '+e.message;
+    gBtn.disabled=false; gBtn.innerHTML='<img src="https://www.svgrepo.com/show/475656/google-color.svg"> دخول بجوجل';
+  }
+};
+
+window.sendReset = async ()=>{
+  const em=document.getElementById('fEmail').value.trim();
+  const fMsg=document.getElementById('fMsg');
+  const sendBtn=document.getElementById('sendBtn');
+  if(!em){fMsg.innerText='اكتب الايميل'; return;}
+  sendBtn.disabled=true; sendBtn.innerText='جاري الارسال...'; fMsg.innerText='';
+  try{
+    await sendPasswordResetEmail(auth, em);
+    document.getElementById('step1').style.display='none';
+    document.getElementById('step2').style.display='block';
+    document.getElementById('fMsg2').innerText='اتفتح ايميلك ودوس على اللينك لتغيير الباسورد';
+  }catch(e){
+    fMsg.innerText='الايميل مش موجود او فيه مشكلة';
+    sendBtn.disabled=false; sendBtn.innerText='إرسال رابط الاستعادة';
+  }
+};
+
+window.openF=()=>document.getElementById('forgotModal').classList.add('show');
+window.closeF=()=>document.getElementById('forgotModal').classList.remove('show');
+</script>
+</body>
 </html>
