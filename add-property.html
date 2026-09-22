@@ -1,70 +1,95 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إضافة عقار - عقارات برو</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        :root { --y: #FFD400; --bg: #07080A; --card: #0E0F12; --b: #1E1F25 }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif }
-        body { background: var(--bg); color: #fff; min-height: 100vh }
-       .header { height: 60px; background: #08090B; border-bottom: 1px solid #15161B; display: flex; align-items: center; justify-content: space-between; padding: 0 3%; position: sticky; top: 0; z-index: 10 }
-       .header a { color: #888; font-size: 12px; text-decoration: none }
-       .logo { color: var(--y); font-weight: 900; display: flex; align-items: center; gap: 8px }
-       .form { max-width: 620px; margin: 20px auto; background: var(--card); border: 1px solid var(--b); border-radius: 18px; padding: 22px }
-       .form h2 { font-weight: 900; text-align: center; margin-bottom: 4px }
-       .form p { text-align: center; color: #666; font-size: 11px; margin-bottom: 16px }
-        label { font-size: 11px; color: #888; display: block; margin-top: 14px; margin-bottom: 4px }
-        input, textarea, select { width: 100%; background: #121316; border: 1px solid var(--b); border-radius: 12px; padding: 12px; color: #fff; outline: none; font-size: 13px }
-        input:focus, textarea:focus, select:focus { border-color: var(--y) }
-       .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px }
-       .upload-box { border: 2px dashed #2A2B33; border-radius: 14px; padding: 18px; text-align: center; margin-top: 8px; cursor: pointer; background: #121316 }
-       .upload-box:hover { border-color: var(--y) }
-        #preview { width: 100%; height: 180px; border-radius: 12px; object-fit: cover; margin-top: 10px; display: none; border: 1px solid var(--b) }
-       .btn { width: 100%; height: 48px; background: var(--y); color: #000; border: none; border-radius: 24px; font-weight: 900; font-size: 14px; margin-top: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px }
-       .btn:disabled { opacity:.6 }
-        #msg { margin-top: 14px; text-align: center; font-size: 12px; min-height: 18px; white-space: pre-wrap }
-        @media(max-width:600px) {.form { margin: 10px; padding: 16px }.row { grid-template-columns: 1fr 1fr } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>إضافة عقار - عقارات برو</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--y:#FFD400;--bg:#07080A;--c:#0E0F12;--b:#1E1F25}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:#fff;padding-bottom:100px}
+.header{height:60px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:10}
+.btn{padding:8px 14px;border-radius:20px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer}
+.btn-y{background:var(--y);color:#000}
+.btn-o{border:1px solid var(--y);color:var(--y);background:transparent}
+.wrap{max-width:700px;margin:0 auto;padding:12px}
+.card{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:18px;margin-top:12px}
+.card h2{font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h2 i{color:var(--y)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.row{grid-template-columns:1fr}}
+.f{margin-bottom:12px}
+.f label{font-size:11px;color:#9A9CA3;display:block;margin-bottom:6px}
+.f input,.f select,.f textarea{width:100%;background:#121316;border:1px solid var(--b);border-radius:12px;padding:12px;color:#fff;outline:none;font-size:13px;min-height:46px;transition:.2s}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--y)}
+.f textarea{min-height:90px;resize:none}
+.upload{border:2px dashed #2A2B32;border-radius:16px;padding:18px;text-align:center;background:#121316;cursor:pointer;transition:.2s;position:relative;overflow:hidden}
+.upload:hover{border-color:var(--y);background:#16171D}
+.upload i{font-size:26px;color:var(--y);display:block;margin-bottom:8px}
+.upload small{color:#666;font-size:10px;display:block;margin-top:6px}
+.preview{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.preview img{width:100%;height:90px;object-fit:cover;border-radius:10px;border:1px solid var(--b)}
+.submit{width:100%;height:52px;background:var(--y);color:#000;border:none;border-radius:26px;font-weight:900;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;box-shadow:0 8px 20px rgba(255,212,0,.3)}
+.submit:disabled{opacity:.6}
+.progress{height:6px;background:#1E1F25;border-radius:10px;overflow:hidden;margin-top:10px;display:none}
+.progress div{height:100%;background:var(--y);width:0%;transition:.3s}
+.note{background:#FFD40014;border:1px solid #FFD40030;color:#FFD400;border-radius:12px;padding:10px;font-size:11px;margin-top:10px;line-height:1.6}
+</style>
 </head>
 <body>
-    <div class="header">
-        <a href="index.html">← رجوع</a>
-        <div class="logo"><i class="fa-solid fa-house-chimney"></i> إضافة عقار</div>
-        <a href="profile.html" style="color:var(--y)">الملف</a>
-    </div>
-    <div class="form">
-        <h2>انشر عقارك الآن</h2>
-        <p>هيظهر مع صورتك واسمك في كل مكان</p>
-        <label>عنوان العقار *</label><input id="title" placeholder="مثال: شقة 150م سوبر لوكس">
-        <label>المدينة *</label>
-        <select id="city">
-            <option value="">اختار المدينة</option>
-            <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option>
-            <option>المنصورة</option><option>طنطا</option><option>أسوان</option>
-            <option>الساحل الشمالي</option><option>القليوبية</option>
-        </select>
-        <label>السعر بالجنيه *</label><input id="price" type="number" placeholder="1500000">
-        <div class="row">
-            <div><label>المساحة م²</label><input id="area" type="number" placeholder="150"></div>
-            <div><label>عدد الغرف</label><input id="bedrooms" type="number" placeholder="3"></div>
-            <div><label>عدد الحمامات</label><input id="bathrooms" type="number" placeholder="2"></div>
-        </div>
-        <label>رقم الواتساب *</label><input id="phone" placeholder="2010xxxxxxxx">
-        <label>وصف العقار</label><textarea id="desc" rows="4" placeholder="اكتب تفاصيل العقار..."></textarea>
-        <label>الصورة الرئيسية</label>
-        <div class="upload-box" onclick="document.getElementById('main_image').click()">
-            <i class="fa-solid fa-cloud-arrow-up" style="color:var(--y);font-size:26px"></i>
-            <div style="font-size:12px;margin-top:6px">اضغط لاختيار صورة</div>
-            <div id="fileName" style="font-size:10px;color:var(--y);margin-top:4px"></div>
-        </div>
-        <input id="main_image" type="file" accept="image/*" hidden>
-        <img id="preview">
-        <button class="btn" id="pubBtn"><i class="fa-solid fa-rocket"></i> نشر العقار الآن</button>
-        <div id="msg"></div>
-    </div>
+<div class="header">
+<a href="index.html" class="btn btn-o"><i class="fa-solid fa-house"></i> الرئيسية</a>
+<div style="color:var(--y);font-weight:900">إضافة عقار</div>
+<a href="profile.html" class="btn btn-y" id="userBtn">حسابي</a>
+</div>
+
+<div class="wrap">
+<div class="card">
+<h2><i class="fa-solid fa-plus"></i> بيانات العقار</h2>
+
+<div class="f">
+<label>صور العقار (هتترفع ببلاش على ImgBB)</label>
+<div class="upload" onclick="document.getElementById('fileInp').click()">
+<i class="fa-solid fa-cloud-arrow-up"></i>
+<b style="font-size:13px">اضغط لرفع الصور</b>
+<small>تقدر ترفع اكتر من صورة - اول صورة هي الرئيسية</small>
+<input type="file" id="fileInp" hidden accept="image/*" multiple>
+</div>
+<div class="preview" id="preview"></div>
+<div class="progress" id="progWrap"><div id="prog"></div></div>
+<div class="note"><i class="fa-solid fa-circle-info"></i> الصور هتترفع على ImgBB مجانا ومش هتكلفك Firebase خالص</div>
+</div>
+
+<div class="f"><label>عنوان العقار</label><input id="title" placeholder="مثال: شقة سوبر لوكس في التجمع"></div>
+
+<div class="row">
+<div class="f"><label>المدينة</label><select id="city"><option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option><option>المنصورة</option><option>طنطا</option><option>أسيوط</option><option>شرم الشيخ</option><option>الغردقة</option></select></div>
+<div class="f"><label>نوع الصفقة</label><select id="deal"><option>للبيع</option><option>للإيجار</option></select></div>
+</div>
+
+<div class="row">
+<div class="f"><label>السعر (ج.م)</label><input id="price" type="number" placeholder="1000000"></div>
+<div class="f"><label>المساحة (م²)</label><input id="area" type="number" placeholder="120"></div>
+</div>
+
+<div class="row">
+<div class="f"><label>عدد الغرف</label><input id="beds" type="number" value="3"></div>
+<div class="f"><label>عدد الحمامات</label><input id="baths" type="number" value="1"></div>
+</div>
+
+<div class="row">
+<div class="f"><label>رقم الواتساب</label><input id="phone" placeholder="010xxxxxxxx"></div>
+<div class="f"><label>نوع العقار</label><select id="type"><option>شقة</option><option>فيلا</option><option>محل</option><option>مكتب</option><option>أرض</option></select></div>
+</div>
+
+<div class="f"><label>الوصف</label><textarea id="desc" placeholder="اكتب تفاصيل العقار، التشطيب، الدور، المميزات..."></textarea></div>
+
+<button class="submit" id="submitBtn"><i class="fa-solid fa-rocket"></i> نشر العقار الآن</button>
+<div id="msg" style="text-align:center;margin-top:12px;font-size:12px"></div>
+</div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -77,10 +102,8 @@ const firebaseConfig = {
   projectId: "hack1-cb0f2",
   storageBucket: "hack1-cb0f2.firebasestorage.app",
   messagingSenderId: "926645598259",
-  appId: "1:926645598259:web:eabe7d3f588ee0b26f0b46",
-  measurementId: "G-0ESMXPYWXC"
+  appId: "1:926645598259:web:eabe7d3f588ee0b26f0b46"
 };
-
 const IMGBB_KEY = "4db587bdabc9b335c341251460d0d6e2";
 
 const app = initializeApp(firebaseConfig);
@@ -88,99 +111,98 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUser = null;
-onAuthStateChanged(auth, user => {
+let uploadedUrls = [];
+
+onAuthStateChanged(auth, user=>{
   currentUser = user;
   if(!user){
-    // لو مش مسجل دخول وديه للوجين
-    // location.href = 'login.html';
+    const local = JSON.parse(localStorage.getItem('aqar_user')||localStorage.getItem('user')||'null');
+    if(!local){ location.href='login.html'; return; }
+    document.getElementById('userBtn').innerText = local.name||local.email||'حسابي';
+    // fake user for local
+    currentUser = {uid: local.id||'local_'+Date.now(), displayName: local.name, email: local.email, photoURL: null};
+  } else {
+    document.getElementById('userBtn').innerText = user.displayName||'حسابي';
   }
 });
 
-const mainImage = document.getElementById('main_image');
+const fileInp = document.getElementById('fileInp');
 const preview = document.getElementById('preview');
-const fileName = document.getElementById('fileName');
+const progWrap = document.getElementById('progWrap');
+const prog = document.getElementById('prog');
 
-mainImage.addEventListener('change', function(){
-  const file = this.files[0];
-  if(file){
-    fileName.innerText = file.name;
-    const reader = new FileReader();
-    reader.onload = e => {
-      preview.src = e.target.result;
-      preview.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
+fileInp.addEventListener('change', async (e)=>{
+  const files = [...e.target.files];
+  if(!files.length) return;
+  preview.innerHTML = '';
+  uploadedUrls = [];
+  progWrap.style.display='block';
+  prog.style.width='0%';
+
+  for(let i=0;i<files.length;i++){
+    const file = files[i];
+    const urlEl = document.createElement('img');
+    urlEl.src = URL.createObjectURL(file);
+    preview.appendChild(urlEl);
+
+    // رفع فوري على ImgBB
+    try{
+      const fd = new FormData(); fd.append("image", file);
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {method:"POST", body:fd});
+      const data = await res.json();
+      if(data.success){
+        uploadedUrls.push(data.data.url);
+        urlEl.style.border='2px solid #25D366';
+      }
+    }catch(err){ console.error(err); }
+    prog.style.width = Math.round(((i+1)/files.length)*100) + '%';
   }
+  document.getElementById('msg').innerHTML = `<span style="color:#25D366"><i class="fa-solid fa-check"></i> تم رفع ${uploadedUrls.length} صورة بنجاح</span>`;
 });
 
-async function uploadToImgBB(file){
-  const form = new FormData();
-  form.append("image", file);
-  const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
-    method: "POST",
-    body: form
-  });
-  const data = await res.json();
-  if(!data.success) throw new Error("فشل رفع الصورة");
-  return data.data.url;
-}
-
-window.publish = async function(){}
-
-document.getElementById('pubBtn').addEventListener('click', async ()=>{
-  const title = document.getElementById('title').value.trim();
-  const city = document.getElementById('city').value;
-  const price = document.getElementById('price').value.trim();
-  const area = document.getElementById('area').value.trim();
-  const bedrooms = document.getElementById('bedrooms').value.trim();
-  const bathrooms = document.getElementById('bathrooms').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const desc = document.getElementById('desc').value.trim();
-  const file = mainImage.files[0];
-
-  const btn = document.getElementById('pubBtn');
+document.getElementById('submitBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('submitBtn');
   const msg = document.getElementById('msg');
+  const title = document.getElementById('title').value.trim();
+  const price = document.getElementById('price').value;
+  if(!title ||!price){ alert('اكتب العنوان والسعر'); return; }
+  if(!uploadedUrls.length){ alert('ارفع صورة واحدة على الأقل'); return; }
+  if(!currentUser){ alert('سجل دخول الأول'); location.href='login.html'; return; }
 
-  if(!title ||!city ||!price ||!phone){
-    msg.style.color = '#f55';
-    msg.innerText = 'اكمل البيانات المطلوبة *';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
-  msg.style.color = '#888';
-  msg.innerText = file? 'جاري رفع الصورة على ImgBB (مجاني)...' : 'جاري حفظ العقار...';
-
+  btn.disabled=true; btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر...';
   try{
-    let imageUrl = "";
-    if(file){
-      imageUrl = await uploadToImgBB(file);
-    }
-
-    const user = currentUser || JSON.parse(localStorage.getItem('user') || '{}');
-
-    await addDoc(collection(db, "properties"), {
-      title, city, price: Number(price), area: area?Number(area):0,
-      bedrooms: bedrooms?Number(bedrooms):0, bathrooms: bathrooms?Number(bathrooms):0,
-      phone, desc, imageUrl,
-      ownerId: user.uid || "guest",
-      ownerName: user.displayName || user.name || "مستخدم",
-      ownerEmail: user.email || "",
-      ownerPhoto: user.photoURL || user.photo || "",
+    const docData = {
+      title: title,
+      city: document.getElementById('city').value,
+      deal: document.getElementById('deal').value,
+      price: Number(price),
+      area: Number(document.getElementById('area').value||0),
+      bedrooms: Number(document.getElementById('beds').value||0),
+      bathrooms: Number(document.getElementById('baths').value||0),
+      phone: document.getElementById('phone').value,
+      type: document.getElementById('type').value,
+      desc: document.getElementById('desc').value,
+      imageUrl: uploadedUrls[0],
+      images: uploadedUrls,
+      ownerId: currentUser.uid,
+      ownerName: currentUser.displayName||currentUser.email||'مالك',
+      ownerEmail: currentUser.email||'',
+      ownerPhoto: currentUser.photoURL||'',
       createdAt: serverTimestamp()
-    });
+    };
+    const ref = await addDoc(collection(db,"properties"), docData);
 
-    msg.style.color = '#0f0';
-    msg.innerText = 'تم نشر العقار بنجاح ✅';
-    setTimeout(()=> location.href = 'index.html', 1200);
+    // احفظ نسخة local كمان
+    const localAll = JSON.parse(localStorage.getItem('aqar_properties')||'[]');
+    localAll.unshift({id: ref.id,...docData, main_image: uploadedUrls[0]});
+    localStorage.setItem('aqar_properties', JSON.stringify(localAll));
 
+    msg.innerHTML='<span style="color:#25D366">✅ تم نشر العقار! جاري تحويلك...</span>';
+    setTimeout(()=> location.href='index.html', 1200);
   }catch(e){
     console.error(e);
-    msg.style.color = '#f55';
-    msg.innerText = 'خطأ: ' + e.message;
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-rocket"></i> نشر العقار الآن';
+    msg.innerHTML=`<span style="color:#f55">خطأ: ${e.message}</span>`;
+    btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-rocket"></i> نشر العقار الآن';
   }
 });
 </script>
