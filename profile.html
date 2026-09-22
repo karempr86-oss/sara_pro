@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الملف الشخصي</title>
+<title>الملف الشخصي - PocketBase</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -22,143 +22,137 @@ body{background:var(--bg);color:#fff}
 .pc{background:#121316;border:1px solid var(--b);border-radius:12px;overflow:hidden;cursor:pointer;transition:.3s}
 .pc:hover{border-color:var(--y)}
 .pc img{width:100%;height:130px;object-fit:cover}
-.pc.del{width:100%;background:#ff44441a;color:#f44;border:none;border-top:1px solid #222;padding:6px;font-size:10px;cursor:pointer}
 @media(max-width:768px){.grid{grid-template-columns:1fr 1fr}.head{flex-direction:column;text-align:center}}
 </style>
 </head>
 <body>
 <div class="header"><a href="index.html" style="color:#888;font-size:12px">← الرئيسية</a><div class="logo">عقارات برو</div><div></div></div>
 <div class="wrap">
-<div class="head" id="head">جاري التحميل...</div>
+<div class="head" id="head">جاري التحميل من PocketBase...</div>
 <h3 style="margin-top:20px;font-weight:900">عقاراته (<span id="cnt">0</span>)</h3>
 <div class="grid" id="grid"></div>
 </div>
 
 <script>
-// نفس نظام التخزين بتاع index
+const PB = `http://${location.hostname}:8090`;
+// auth من localStorage
+let auth = {};
+try{ auth = JSON.parse(localStorage.getItem('pocketbase_auth')||'{}'); }catch{}
+let token = auth.token || localStorage.getItem('pb_token') || '';
+let me = auth.model || {};
+try{ if(!me.id) me = JSON.parse(localStorage.getItem('pb_user')||'null') || {}; }catch{}
+
 const qId = new URLSearchParams(location.search).get('id');
-let me = null;
-try{ me = JSON.parse(localStorage.getItem('aqar_user')||'null') || JSON.parse(localStorage.getItem('user')||'null') || JSON.parse(localStorage.getItem('pb_user')||'null'); }catch{}
-let allUsers = JSON.parse(localStorage.getItem('aqar_all_users')||'[]');
-
-function getUserById(id){
-  if(me && (me.id===id || me.email===id)) return me;
-  return allUsers.find(u=>u.id===id || u.email===id) || {id: id, name: 'مستخدم', email: id, avatar: ''};
-}
-
-function saveMe(){
-  localStorage.setItem('aqar_user', JSON.stringify(me));
-  localStorage.setItem('user', JSON.stringify(me));
-  // حدثه في قائمة المستخدمين
-  const idx = allUsers.findIndex(u=>u.id===me.id);
-  if(idx>=0) allUsers[idx]=me; else allUsers.push(me);
-  localStorage.setItem('aqar_all_users', JSON.stringify(allUsers));
-}
+const targetId = qId || me.id;
 
 async function load(){
-  const head=document.getElementById('head');
-  if(!qId &&!me){
-    head.innerHTML=`انت مش مسجل دخول <a href="login.html" style="color:var(--y)">سجل دخول</a>`;
+  const head = document.getElementById('head');
+  if(!targetId){
+    head.innerHTML=`مش مسجل دخول <a href="login.html" style="color:var(--y)">دخول</a>`;
     return;
   }
-  const targetId = qId || me.id || me.email;
-  const u = qId? getUserById(qId) : me;
-  const isMe =!qId || (me && (me.id===u.id || me.email===u.email));
+  try{
+    // 1. جيب بيانات اليوزر
+    const r = await fetch(`${PB}/api/collections/users/records/${targetId}`);
+    if(!r.ok) throw new Error('user not found');
+    const u = await r.json();
+    const name = u.name || u.username || u.email.split('@')[0];
+    const av = u.avatar ? `${PB}/api/files/users/${u.id}/${u.avatar}?thumb=200x200` : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD400&color=000&size=80`;
+    const isMe = me.id === u.id;
 
-  const name = u.name || u.displayName || (u.email?u.email.split('@')[0]:'مستخدم');
-  const av = u.avatar || u.photo || u.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD400&color=000&size=80`;
-  const email = u.email||'';
+    head.innerHTML = `
+      <img id="avatarImg" src="${av}">
+      <div style="flex:1">
+        <h2 id="nameTxt" style="font-weight:900">${name}</h2>
+        <p style="color:#888;font-size:11px">${u.email||''}</p>
+        ${isMe ? `
+          <div class="edit-box">
+            <input id="newName" value="${name}" placeholder="الاسم الجديد">
+            <button class="btn-y" onclick="updateName()"><i class="fa-solid fa-check"></i> حفظ الاسم</button>
+          </div>
+          <label class="btn-o" style="margin-top:8px;display:inline-block;cursor:pointer">
+            <i class="fa-solid fa-camera"></i> تغيير صورة الملف الشخصي
+            <input type="file" hidden id="avFile" accept="image/*" onchange="updateAvatar(this)">
+          </label>
+          <div style="margin-top:10px;color:#666;font-size:10px">الصورة هتتحدث في PocketBase تلقائي</div>
+        ` : `
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-y" onclick="goChat('${u.id}')"><i class="fa-solid fa-paper-plane"></i> مراسلة</button>
+            <button class="btn-o" onclick="goChat('${u.id}')"><i class="fa-solid fa-comments"></i> فتح الشات</button>
+            <a href="https://wa.me/${u.phone||''}" target="_blank" class="btn-o"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
+          </div>
+        `}
+        <div style="margin-top:8px;color:#888;font-size:11px"><b id="pc" style="color:#fff">0</b> عقار منشور</div>
+      </div>
+    `;
 
-  // عقاراته
-  const allProps = JSON.parse(localStorage.getItem('aqar_properties')||'[]');
-  const myProps = allProps.filter(p=>
-    (p.ownerId && p.ownerId===u.id) ||
-    (p.ownerEmail && p.ownerEmail===u.email) ||
-    (p.ownerName && p.ownerName===name) ||
-    (!qId) // لو بروفايلي اعرض كل اللي انا نشرته حتى لو قديم بدون owner
-  );
-  // لو بروفايل شخص تاني ومعندوش ownerId، نحاول نفلتر بالاسم
-  let filtered = myProps;
-  if(qId && myProps.length===0){
-    filtered = allProps.filter(p=> (p.ownerName||'').includes(name));
+    // 2. جيب عقاراته
+    const r2 = await fetch(`${PB}/api/collections/properties/records?filter=owner="${u.id}"&perPage=200&sort=-created`);
+    const d2 = await r2.json();
+    document.getElementById('cnt').innerText = d2.items.length;
+    document.getElementById('pc').innerText = d2.items.length;
+
+    document.getElementById('grid').innerHTML = d2.items.map(p=>{
+      const img = p.main_image ? `${PB}/api/files/properties/${p.id}/${p.main_image}?thumb=400x300` : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
+      return `<div class="pc" onclick="location.href='details.html?id=${p.id}'">
+        <img src="${img}"><div style="padding:8px;text-align:center;font-size:12px">${p.title||'عقار'}</div>
+        ${isMe? `<div style="padding:6px;text-align:center"><button onclick="event.stopPropagation();delProp('${p.id}')" style="background:#ff44441a;color:#f55;border:none;padding:4px 10px;border-radius:12px;font-size:10px;cursor:pointer">حذف</button></div>`:``}
+      </div>`;
+    }).join('') || '<div style="grid-column:1/-1;text-align:center;color:#666;padding:20px">لا يوجد عقارات</div>';
+
+  }catch(e){
+    head.innerHTML=`<span style="color:#f55">خطأ: ${e.message} - تأكد ان PocketBase شغال على ${PB}</span>`;
   }
-  // لو بروفايلي ولسه فاضي، اعرض كل العقارات كـ ديمو (عشان اول مرة)
-  const displayProps = filtered.length? filtered : (isMe? allProps : []);
-
-  head.innerHTML=`
-    <img id="avatarImg" src="${av}">
-    <div style="flex:1">
-      <h2 id="nameTxt" style="font-weight:900">${name}</h2>
-      <p style="color:#888;font-size:11px">${email}</p>
-      ${isMe? `
-        <div class="edit-box">
-          <input id="newName" value="${name}" placeholder="الاسم الجديد">
-          <button class="btn-y" onclick="updateName()"><i class="fa-solid fa-check"></i> حفظ الاسم</button>
-        </div>
-        <label class="btn-o" style="margin-top:8px;display:inline-block;cursor:pointer">
-          <i class="fa-solid fa-camera"></i> تغيير الصورة
-          <input type="file" hidden id="avFile" accept="image/*" onchange="updateAvatar(this)">
-        </label>
-        <div style="margin-top:10px;display:flex;gap:8px">
-          <button class="btn-o" onclick="localStorage.removeItem('aqar_user');localStorage.removeItem('user');location.href='login.html'">تسجيل خروج</button>
-          <a href="index.html" class="btn-y">تصفح العقارات</a>
-        </div>
-      ` : `
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn-y" onclick="goChat('${u.id||u.email}')"><i class="fa-solid fa-paper-plane"></i> مراسلة</button>
-          <button class="btn-o" onclick="goChat('${u.id||u.email}')"><i class="fa-solid fa-comments"></i> فتح الشات</button>
-          <a href="https://wa.me/${u.phone||''}" target="_blank" class="btn-o"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
-        </div>
-      `}
-      <div style="margin-top:8px;color:#888;font-size:11px"><b id="pc" style="color:#fff">${displayProps.length}</b> عقار منشور</div>
-    </div>`;
-
-  document.getElementById('cnt').innerText=displayProps.length;
-  document.getElementById('grid').innerHTML=displayProps.map(p=>{
-    const img=p.main_image||'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
-    return `<div class="pc">
-      <div onclick="location.href='details.html?id=${p.id}'"><img src="${img}"><div style="padding:8px;text-align:center;font-size:12px">${p.title||'عقار'}</div></div>
-      ${isMe? `<button class="del" onclick="delProp('${p.id}')"><i class="fa-solid fa-trash"></i> حذف العقار</button>` : ``}
-    </div>`;
-  }).join('') || '<div style="grid-column:1/-1;text-align:center;color:#666;padding:20px">لا يوجد عقارات</div>';
 }
 
-window.updateName=()=>{
-  const nn=document.getElementById('newName').value.trim();
-  if(!nn){alert('اكتب الاسم'); return;}
-  me.name=nn; me.displayName=nn;
-  saveMe();
-  document.getElementById('nameTxt').innerText=nn;
-  alert('✅ تم تغيير الاسم');
-  location.reload();
+window.updateName = async ()=>{
+  const nn = document.getElementById('newName').value.trim();
+  if(!nn) return alert('اكتب الاسم');
+  if(!token) return alert('سجل دخول تاني');
+  const fd = new FormData(); fd.append('name', nn);
+  const res = await fetch(`${PB}/api/collections/users/records/${me.id}`, {
+    method:'PATCH', headers:{'Authorization': token}, body:fd
+  });
+  if(res.ok){
+    const data = await res.json();
+    localStorage.setItem('pb_user', JSON.stringify(data));
+    auth.model=data; localStorage.setItem('pocketbase_auth', JSON.stringify(auth));
+    document.getElementById('nameTxt').innerText=nn;
+    alert('✅ تم تغيير الاسم');
+    location.reload();
+  }else{
+    alert('فشل: '+(await res.text()));
+  }
 };
 
-window.updateAvatar=(inp)=>{
+window.updateAvatar = async (inp)=>{
   if(!inp.files[0]) return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const base64=e.target.result;
-    document.getElementById('avatarImg').src=base64;
-    me.avatar=base64; me.photo=base64; me.photoURL=base64;
-    saveMe();
+  if(!token) return alert('سجل دخول تاني');
+  const fd = new FormData(); fd.append('avatar', inp.files[0]);
+  const res = await fetch(`${PB}/api/collections/users/records/${me.id}`, {
+    method:'PATCH', headers:{'Authorization': token}, body:fd
+  });
+  if(res.ok){
+    const data = await res.json();
+    localStorage.setItem('pb_user', JSON.stringify(data));
     alert('✅ تم تغيير الصورة');
-  };
-  reader.readAsDataURL(inp.files[0]);
+    location.reload();
+  }else{
+    alert('فشل: '+(await res.text()));
+  }
 };
 
-window.delProp=(id)=>{
-  if(!confirm('تمسح العقار ده؟')) return;
-  let all=JSON.parse(localStorage.getItem('aqar_properties')||'[]');
-  all=all.filter(p=>p.id!=id);
-  localStorage.setItem('aqar_properties', JSON.stringify(all));
-  load();
+window.delProp = async (id)=>{
+  if(!confirm('تمسح العقار؟')) return;
+  const res = await fetch(`${PB}/api/collections/properties/records/${id}`, {
+    method:'DELETE', headers:{'Authorization': token}
+  });
+  if(res.ok){ alert('تم المسح'); load(); } else alert('فشل المسح');
 };
 
-window.goChat=(targetId)=>{
-  // يروح لصفحة الشات اللي عملناها
-  // هنحفظ الـ target عشان صفحة chat.html تعرفه
-  localStorage.setItem('chat_target', targetId);
-  location.href=`chat.html?id=${encodeURIComponent(targetId)}`;
+window.goChat = (uid)=>{
+  localStorage.setItem('chat_target', uid);
+  location.href=`chat.html?id=${encodeURIComponent(uid)}`;
 };
 
 load();
