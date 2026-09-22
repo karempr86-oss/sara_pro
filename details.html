@@ -2,96 +2,48 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>تفاصيل العقار - عقارات برو</title>
+<title>تفاصيل العقار - AL TAKRURY</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{--y:#FFD400;--bg:#07080A;--c:#0E0F12;--b:#1E1F25}
+:root{--gold:#D4AF37;--gold2:#B8962E;--black:#050507;--card:#0E0E10;--b:#1E1E22}
 *{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:#fff;padding-bottom:90px}
-.header{height:60px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:10}
-.btn{padding:8px 14px;border-radius:20px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-.btn-y{background:var(--y);color:#000}
-.btn-o{border:1px solid var(--y);color:var(--y)}
+body{background:var(--black);color:#fff;padding-bottom:90px}
+.header{height:62px;background:rgba(5,5,7,.96);border-bottom:1px solid rgba(212,175,55,.2);display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
+.btn{padding:8px 16px;border-radius:22px;font-weight:800;font-size:11px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer}
+.btn-gold{background:linear-gradient(90deg,var(--gold),var(--gold2));color:#000}
+.btn-o{border:1px solid var(--gold);color:var(--gold);background:transparent}
 .container{max-width:1100px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1.6fr.9fr;gap:14px}
-.img-box{background:var(--c);border:1px solid var(--b);border-radius:18px;overflow:hidden;position:relative}
+.img-box{background:var(--card);border:1px solid rgba(212,175,55,.15);border-radius:18px;overflow:hidden;position:relative}
 .img-box img{width:100%;height:420px;object-fit:cover;display:block}
-.info{background:var(--c);border:1px solid var(--b);border-radius:18px;padding:18px;height:fit-content;position:sticky;top:72px}
-.price{color:var(--y);font-size:22px;font-weight:900;margin:8px 0}
+.info{background:var(--card);border:1px solid rgba(212,175,55,.2);border-radius:18px;padding:18px;height:fit-content;position:sticky;top:74px}
+.price{color:var(--gold);font-size:22px;font-weight:900;margin:8px 0}
 .spec{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
-.spec span{background:#121316;border:1px solid var(--b);padding:8px 12px;border-radius:12px;font-size:11px;color:#ccc}
-.owner{display:flex;align-items:center;gap:10px;background:#121316;border:1px solid var(--b);border-radius:14px;padding:12px;margin-top:16px}
-.owner img{width:44px;height:44px;border-radius:50%;border:2px solid var(--y);object-fit:cover}
-.whats{width:100%;height:48px;background:#25D366;color:#fff;border:none;border-radius:24px;font-weight:900;margin-top:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px}
+.spec span{background:#121214;border:1px solid var(--b);padding:8px 12px;border-radius:12px;font-size:11px;color:#aaa}
+.owner{display:flex;align-items:center;gap:10px;background:#121214;border:1px solid var(--b);border-radius:14px;padding:12px;margin-top:16px;cursor:pointer}
+.owner img{width:42px;height:42px;border-radius:50%;border:2px solid var(--gold);object-fit:cover}
+.whats{width:100%;height:48px;background:#25D366;color:#fff;border:none;border-radius:24px;font-weight:900;margin-top:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;box-shadow:0 6px 18px rgba(37,211,102,.3)}
 .call{width:100%;height:44px;background:transparent;border:1px solid var(--b);color:#fff;border-radius:24px;font-weight:700;margin-top:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-
-@media(max-width:900px){
- .container{grid-template-columns:1fr;gap:10px;padding:10px}
- .img-box img{height:260px}
- .info{position:relative;top:auto}
- .whats{position:fixed;bottom:14px;left:12px;right:12px;width:auto;z-index:999;box-shadow:0 8px 24px rgba(37,211,102,.4)}
- .call{margin-bottom:70px}
-}
+@media(max-width:900px){.container{grid-template-columns:1fr;gap:10px;padding:10px}.img-box img{height:260px}.info{position:relative;top:auto}.whats{position:fixed;bottom:14px;left:12px;right:12px;width:auto;z-index:999}.call{margin-bottom:70px}}
 </style>
 </head>
 <body>
 <div class="header">
-<a href="index.html" class="btn-o"><i class="fa-solid fa-arrow-right"></i> رجوع</a>
-<div style="color:var(--y);font-weight:900"><i class="fa-solid fa-house-chimney"></i> عقارات برو</div>
-<a href="profile.html" class="btn-y">حسابي</a>
+<a href="index.html" class="btn btn-o"><i class="fa-solid fa-arrow-right"></i> الرئيسية</a>
+<div style="color:var(--gold);font-weight:900;letter-spacing:1px">AL TAKRURY</div>
+<a href="profile.html" class="btn btn-gold">حسابي</a>
 </div>
-
-<div class="container" id="content">
-<div style="grid-column:1/-1;text-align:center;padding:80px;color:#666"><i class="fa-solid fa-spinner fa-spin" style="font-size:28px;display:block;margin-bottom:10px"></i>جاري تحميل العقار...</div>
-</div>
-
+<div class="container" id="content"><div style="grid-column:1/-1;text-align:center;padding:80px;color:#666"><i class="fa-solid fa-spinner fa-spin" style="font-size:28px;display:block;margin-bottom:10px"></i>جاري التحميل...</div></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig = {
-  apiKey: "AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",
-  authDomain: "hack1-cb0f2.firebaseapp.com",
-  projectId: "hack1-cb0f2",
-  storageBucket: "hack1-cb0f2.firebasestorage.app",
-  messagingSenderId: "926645598259",
-  appId: "1:926645598259:web:eabe7d3f588ee0b26f0b46"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const id = new URLSearchParams(location.search).get('id');
-const content = document.getElementById('content');
-async function load(){
-  try{
-    const snap = await getDoc(doc(db,"properties",id));
-    if(!snap.exists()){ content.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:#f55">العقار غير موجود</div>'; return;}
-    const p = {id:snap.id,...snap.data()};
-    const img = p.imageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800';
-    const price = Number(p.price||0).toLocaleString('ar-EG');
-    const phoneClean = (p.phone||'').replace(/[^0-9]/g,'');
-    content.innerHTML = `
-      <div class="img-box"><img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'"></div>
-      <div class="info">
-        <h2 style="font-weight:900;line-height:1.3">${p.title||'عقار مميز'}</h2>
-        <div style="color:#888;font-size:12px;margin-top:6px"><i class="fa-solid fa-location-dot"></i> ${p.city||'القاهرة'} ${p.area? ' • '+p.area+' م²':''}</div>
-        <div class="price">${price} ج.م</div>
-        <div class="spec">
-          <span><i class="fa-solid fa-ruler"></i> ${p.area||0} م²</span>
-          <span><i class="fa-solid fa-bed"></i> ${p.bedrooms||0} غرف</span>
-          <span><i class="fa-solid fa-bath"></i> ${p.bathrooms||0} حمام</span>
-          <span style="background:var(--y);color:#000;font-weight:800">${p.deal||'للبيع'}</span>
-        </div>
-        <p style="font-size:12px;color:#bbb;line-height:2;margin-top:12px;background:#121316;border:1px solid var(--b);border-radius:12px;padding:12px">${p.desc||'لا يوجد وصف تفصيلي لهذا العقار.'}</p>
-        <div class="owner" onclick="location.href='profile.html?id=${p.ownerId}'" style="cursor:pointer">
-          <img src="${p.ownerPhoto||'https://ui-avatars.com/api/?name='+encodeURIComponent(p.ownerName||'مالك')+'&background=FFD400&color=000'}">
-          <div><div style="font-weight:800;font-size:12px">${p.ownerName||'مالك العقار'}</div><div style="font-size:10px;color:#777">اضغط لعرض ملفه</div></div>
-          <i class="fa-solid fa-chevron-left" style="margin-right:auto;color:#444"></i>
-        </div>
-        <button class="whats" onclick="window.open('https://wa.me/${phoneClean}?text=مرحبا مهتم بعقار ${encodeURIComponent(p.title||'')}', '_blank')"><i class="fa-brands fa-whatsapp"></i> واتساب - ${p.phone||''}</button>
-        <button class="call" onclick="location.href='tel:${p.phone||''}'"><i class="fa-solid fa-phone"></i> اتصال مباشر</button>
-      </div>
-    `;
-  }catch(e){ content.innerHTML='خطأ: '+e.message; }
-}
+const firebaseConfig={apiKey:"AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",authDomain:"hack1-cb0f2.firebaseapp.com",projectId:"hack1-cb0f2",storageBucket:"hack1-cb0f2.firebasestorage.app",messagingSenderId:"926645598259",appId:"1:926645598259:web:eabe7d3f588ee0b26f0b46"};
+const app=initializeApp(firebaseConfig);const db=getFirestore(app);
+const id=new URLSearchParams(location.search).get('id');const content=document.getElementById('content');
+async function load(){try{const snap=await getDoc(doc(db,"properties",id));if(!snap.exists()){content.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:#f55">العقار غير موجود</div>';return;}
+const p={id:snap.id,...snap.data()};const img=p.imageUrl||'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800';const price=Number(p.price||0).toLocaleString('ar-EG');const phoneClean=(p.phone||'').replace(/[^0-9]/g,'');
+content.innerHTML=`<div class="img-box"><img src="${img}"><div style="position:absolute;top:12px;right:12px;background:rgba(5,5,7,.8);border:1px solid var(--gold);color:var(--gold);padding:6px 12px;border-radius:20px;font-size:10px;font-weight:800">${p.deal||'للبيع'} - AL TAKRURY</div></div>
+<div class="info"><h2 style="font-weight:900;line-height:1.3">${p.title||'عقار مميز'}</h2><div style="color:#777;font-size:12px;margin-top:6px"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${p.city||'حدائق الهرم'}</div><div class="price">${price} ج.م</div><div class="spec"><span>${p.area||0} م²</span><span>${p.bedrooms||0} غرف</span><span>${p.bathrooms||0} حمام</span><span style="background:var(--gold);color:#000;font-weight:800">${p.type||'شقة'}</span></div><p style="font-size:12px;color:#aaa;line-height:2;margin-top:12px;background:#121214;border:1px solid var(--b);border-radius:12px;padding:12px">${p.desc||'عقار مميز من التكروري للاستثمار العقاري - بيت أحلامك استثمار مضمون'}</p><div class="owner" onclick="location.href='profile.html?id=${p.ownerId}'"><img src="${p.ownerPhoto||'https://ui-avatars.com/api/?name='+encodeURIComponent(p.ownerName||'مالك')+'&background=D4AF37&color=000'}"><div><div style="font-weight:800;font-size:12px">${p.ownerName||'التكروري'}</div><div style="font-size:10px;color:#666">عرض الملف</div></div><i class="fa-solid fa-chevron-left" style="margin-right:auto;color:#444"></i></div><button class="whats" onclick="window.open('https://wa.me/${phoneClean}?text=مهتم بعقار ${encodeURIComponent(p.title||'')}', '_blank')"><i class="fa-brands fa-whatsapp"></i> واتساب - ${p.phone||'0103 8204417'}</button><button class="call" onclick="location.href='tel:${p.phone||''}'"><i class="fa-solid fa-phone"></i> اتصال مباشر</button></div>`;}catch(e){content.innerHTML='خطأ: '+e.message;}}
 load();
 </script>
 </body>
