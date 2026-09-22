@@ -218,62 +218,31 @@
         <div id="msg"></div>
     </div>
     <script>
-        // ===== ديمو - بدون PocketBase - مربوط مع index.html =====
-        let previewBase64 = '';
+      // حط الـ API Key بتاعك هنا
+const IMGBB_KEY = "4db587bdabc9b335c341251460d0d6e2";
 
-        function showPreview(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const p = document.getElementById('preview');
-                    p.src = e.target.result;
-                    p.style.display = 'block';
-                    previewBase64 = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+async function uploadImage(file){
+  const form = new FormData();
+  form.append("image", file);
+  const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
+    method: "POST",
+    body: form
+  });
+  const data = await res.json();
+  return data.data.url; // ده لينك الصورة
+}
 
-        function publish() {
-            const btn = document.getElementById('pubBtn');
-            const msg = document.getElementById('msg');
-            const title = document.getElementById('title').value.trim();
-            const city = document.getElementById('city').value.trim();
-            const price = document.getElementById('price').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-
-            if (!title || !city || !price || !phone) {
-                msg.innerText = '❌ املى كل الحقول المطلوبة *'; msg.style.color = '#ff5a5a'; return;
-            }
-
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر...'; btn.disabled = true;
-
-            const user = JSON.parse(localStorage.getItem('aqar_user') || 'null') || { name: 'مالك العقار', id: 'demo_user' };
-
-            let props = JSON.parse(localStorage.getItem('aqar_properties') || '[]');
-
-            const newProp = {
-                id: Date.now() + '',
-                title: title,
-                city: city,
-                price: Number(price),
-                area: Number(document.getElementById('area').value || 120),
-                bedrooms: Number(document.getElementById('bedrooms').value || 3),
-                bathrooms: Number(document.getElementById('bathrooms').value || 2),
-                phone: phone,
-                description: document.getElementById('desc').value,
-                ownerName: user.name || 'مالك العقار',
-                ownerId: user.id || 'demo',
-                main_image: previewBase64 || `https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&random=${Date.now()}`,
-                created: new Date().toISOString()
-            };
-
-            props.unshift(newProp);
-            localStorage.setItem('aqar_properties', JSON.stringify(props));
-
-            msg.innerText = '✅ تم النشر بنجاح!'; msg.style.color = 'var(--y)';
-            setTimeout(() => location.href = `details.html?id=${newProp.id}`, 800);
-        }
+// وانت بتحفظ العقار:
+const file = document.getElementById('image').files[0];
+let imageUrl = "";
+if(file){
+  imageUrl = await uploadImage(file); // مجاني
+}
+await addDoc(collection(db, "properties"), {
+  title, price, city,
+  imageUrl, // بنحفظ اللينك بس في Firebase
+  createdAt: serverTimestamp()
+});
     </script>
 </body>
 
