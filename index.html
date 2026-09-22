@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>عقارات برو</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{--y:#FFD400;--bg:#07080A;--b:#1E1F25}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
-body{background:var(--bg);color:#fff;overflow-x:hidden;scroll-behavior:smooth}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:#fff;overflow-x:hidden}
 a{text-decoration:none;color:inherit}
-.header{height:64px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 2%;position:sticky;top:0;z-index:1000}
+.header{height:64px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 3%;position:sticky;top:0;z-index:1000}
 .logo{color:var(--y);font-weight:900;font-size:18px;display:flex;align-items:center;gap:8px}
 .nav{display:flex;gap:20px;font-size:13px;color:#9A9CA3}
 .nav a{cursor:pointer;padding-bottom:4px;border-bottom:2px solid transparent;transition:.2s}
@@ -28,47 +29,78 @@ a{text-decoration:none;color:inherit}
 .search-wrap{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:92%;max-width:1180px;background:rgba(14,15,18,.92);border:1px solid rgba(255,212,0,.3);border-radius:14px;padding:10px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 100px;gap:8px;backdrop-filter:blur(12px);z-index:5}
 .sf{background:#0E0F12;border:1px solid #1E1F25;border-radius:10px;padding:8px 10px}
 .sf small{display:block;color:#5A5C64;font-size:9px}
-.sf input,.sf select{width:100%;background:transparent;border:none;color:#fff;outline:none;font-size:11px;font-weight:700;margin-top:2px}
-.search-btn{background:var(--y);color:#000;border:none;border-radius:10px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-#aboutSection{max-width:900px;margin:20px auto;background:#0E0F12;border:1px solid rgba(255,212,0,.2);border-radius:16px;padding:20px;display:none;line-height:2;color:#bbb}
+.sf input,.sf select{width:100%;background:transparent;border:none;color:#fff;outline:none;font-size:11px;font-weight:700;margin-top:2px;min-height:22px}
+.search-btn{background:var(--y);color:#000;border:none;border-radius:10px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px}
 .main-title{max-width:1280px;margin:30px auto 10px;padding:0 16px;display:flex;justify-content:space-between;align-items:center}
 .card-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1280px;margin:10px auto;padding:0 16px}
-.pcard{background:linear-gradient(145deg,#121316,#0E0F12);border:1px solid #1E1F25;border-radius:16px;overflow:hidden;position:relative;transition:.4s}
-.pcard:hover{border-color:#FFD400;transform:translateY(-8px);box-shadow:0 20px 40px rgba(255,212,0,0.15)}
-.pcard .th{height:180px;position:relative;overflow:hidden;background:#08090A;display:grid;place-items:center}
-.pcard .th img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:.6s}
-.pcard:hover .th img{transform:scale(1.1)}
+.pcard{background:linear-gradient(145deg,#121316,#0E0F12);border:1px solid #1E1F25;border-radius:16px;overflow:hidden;transition:.3s}
+.pcard:hover{border-color:#FFD400;transform:translateY(-6px)}
+.pcard .th{height:180px;position:relative;overflow:hidden;background:#08090A}
+.pcard .th img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .pcard .price{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);background:#FFD400;color:#000;padding:5px 16px;border-radius:20px;font-weight:900;font-size:12px;white-space:nowrap;z-index:2}
 .pcard .bd{padding:22px 12px 12px;text-align:center}
 .pcard .bd h4{font-size:13px;font-weight:800;min-height:38px;line-height:1.4}
 .pcard .loc{font-size:10px;color:#6B6E78;margin-top:6px}
 .pcard .specs{display:flex;justify-content:space-between;font-size:10px;color:#9A9CA3;margin-top:12px;border-top:1px solid #1A1B20;padding-top:10px}
-.owner-mini{display:flex;align-items:center;gap:6px;justify-content:center;background:#0E0F12;border:1px solid #1E1F25;border-radius:20px;padding:4px 10px;width:fit-content;margin:0 auto 8px;cursor:pointer}
+.owner-mini{display:flex;align-items:center;gap:6px;justify-content:center;background:#0E0F12;border:1px solid #1E1F25;border-radius:20px;padding:4px 10px;width:fit-content;margin:0 auto 8px}
 .owner-mini img{width:22px;height:22px;border-radius:50%;border:1px solid var(--y);object-fit:cover}
 .owner-mini span{font-size:10px;font-weight:800;color:#fff}
-.btn-details{margin-top:12px;width:100%;height:34px;border:1px solid rgba(255,212,0,.6);border-radius:20px;background:transparent;color:#FFD400;font-size:11px;font-weight:800;cursor:pointer;transition:.3s}
+.btn-details{margin-top:12px;width:100%;height:40px;border:1px solid rgba(255,212,0,.6);border-radius:20px;background:transparent;color:#FFD400;font-size:11px;font-weight:800;cursor:pointer}
 .btn-details:hover{background:#FFD400;color:#000}
+.fab-add{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--y);color:#000;padding:14px 28px;border-radius:30px;font-weight:900;font-size:14px;z-index:9999;box-shadow:0 8px 24px rgba(255,212,0,.4),0 4px 12px rgba(0,0,0,.5);display:none;align-items:center;gap:8px}
 footer{background:#050507;border-top:1px solid #15161B;padding:16px 3%;display:flex;justify-content:space-between;font-size:10px;color:#5A5C64}
-@media(max-width:768px){.hero-content{width:100%}.search-wrap{grid-template-columns:1fr 1fr}.card-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* ===== موبايل 100% ===== */
+@media(max-width:768px){
+  .header{padding:10px 12px;height:auto;flex-wrap:wrap}
+  .header .logo{font-size:15px}
+  .nav{order:3;width:100%;display:flex;justify-content:space-around;border-top:1px solid #15161B;padding-top:10px;margin-top:8px}
+  .nav a{font-size:12px}
+  .hero{height:auto;min-height:420px;padding-bottom:20px}
+  .hero-content{width:100%;padding:24px 16px 0}
+  .hero-content h1{font-size:32px}
+  .hero-content h2{font-size:13px}
+  .search-wrap{position:relative;bottom:auto;left:auto;transform:none;width:calc(100% - 24px);margin:-30px auto 16px;grid-template-columns:1fr 1fr;z-index:20}
+  .search-btn{grid-column:1/-1;height:48px}
+  .main-title{margin:16px auto 8px;padding:0 12px}
+  .main-title h2{font-size:16px}
+  .card-grid{grid-template-columns:1fr 1fr;gap:10px;padding:0 12px}
+  .pcard .th{height:140px}
+  .pcard .bd{padding:16px 8px 10px}
+  .pcard .bd h4{font-size:11px;min-height:32px}
+  .fab-add{display:flex}
+  footer{padding-bottom:80px}
+}
+@media(max-width:480px){
+  .card-grid{grid-template-columns:1fr}
+  .pcard .th{height:200px}
+}
 </style>
 </head>
 <body>
 <div class="header">
 <div class="logo"><i class="fa-solid fa-house-chimney"></i> عقارات برو</div>
-<div class="nav"><a id="tab-home" class="active" onclick="switchTab('home')">الرئيسية</a><a id="tab-about" onclick="switchTab('about')">من نحن</a><a id="tab-recent" onclick="switchTab('recent')">عقارات حديثة</a></div>
-<div class="auth" id="authArea"><a href="add-property.html" class="btn-y"><i class="fa-solid fa-plus"></i> إضافة عقار</a><a href="login.html" class="btn-o">دخول</a></div>
+<div class="nav"><a id="tab-home" class="active" onclick="switchTab('home')">الرئيسية</a><a id="tab-about" onclick="switchTab('about')">من نحن</a><a id="tab-recent" onclick="switchTab('recent')">حديثة</a></div>
+<div class="auth" id="authArea"><a href="login.html" class="btn-o">دخول</a><a href="add-property.html" class="btn-y" style="display:none" id="addDesk"><i class="fa-solid fa-plus"></i> إضافة</a></div>
 </div>
-<div class="hero" id="hero"><div class="hero-bg"></div><div class="hero-content"><h1>عقارات <span>برو</span></h1><h2>أكبر منصة عقارية في مصر</h2></div>
+
+<div class="hero" id="hero"><div class="hero-bg"></div><div class="hero-content"><h1>عقارات <span>برو</span></h1><h2>أكبر منصة عقارية في مصر</h2></div></div>
+
 <div class="search-wrap">
 <div class="sf"><small>المدينة</small><input id="sCity" placeholder="القاهرة"></div>
-<div class="sf"><small>النوع</small><select id="sType"><option value="">الكل</option><option>شقة</option><option>فيلا</option></select></div>
+<div class="sf"><small>النوع</small><select id="sType"><option value="">الكل</option><option>شقة</option><option>فيلا</option><option>محل</option></select></div>
 <div class="sf"><small>من</small><input id="sMin" type="number" placeholder="500000"></div>
 <div class="sf"><small>إلى</small><input id="sMax" type="number" placeholder="5000000"></div>
 <button class="search-btn" onclick="doSearch()"><i class="fa-solid fa-magnifying-glass"></i> ابحث</button>
-</div></div>
-<div id="aboutSection"><h2 style="color:var(--y)">من نحن</h2><p>عقارات برو منصة مصرية بتوصل البايع بالمشتري مباشرة بدون وسيط، الصور مجانية عبر ImgBB والبيانات على Firebase.</p><br><button onclick="switchTab('home')" style="background:var(--y);border:none;padding:8px 18px;border-radius:20px;font-weight:800">تصفح العقارات</button></div>
+</div>
+
+<div id="aboutSection" style="max-width:900px;margin:20px auto;background:#0E0F12;border:1px solid rgba(255,212,0,.2);border-radius:16px;padding:20px;display:none;line-height:2;color:#bbb"><h2 style="color:var(--y)">من نحن</h2><p>عقارات برو منصة مصرية بتوصل البايع بالمشتري مباشرة بدون وسيط. الصور مجانية عبر ImgBB.</p><br><button onclick="switchTab('home')" style="background:var(--y);border:none;padding:10px 18px;border-radius:20px;font-weight:800">تصفح العقارات</button></div>
+
 <div class="main-title" id="mainTitle"><h2 id="gridTitle" style="font-weight:900;font-size:20px">ـ كل العقارات ـ</h2><span id="count" style="color:var(--y);font-size:11px"></span></div>
-<div class="card-grid" id="grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:#666">جاري تحميل العقارات من Firebase...</div></div>
+<div class="card-grid" id="grid"><div style="grid-column:1/-1;text-align:center;padding:40px;color:#666">جاري تحميل العقارات...</div></div>
+
+<a href="add-property.html" class="fab-add"><i class="fa-solid fa-plus"></i> أضف عقارك الآن</a>
+
 <footer><div>عقارات برو © 2026</div><div>عقارك بأمان</div></footer>
 
 <script type="module">
@@ -91,32 +123,28 @@ const auth = getAuth(app);
 let all = [];
 
 async function fetchProperties(){
-  const grid = document.getElementById('grid');
   try{
     const q = query(collection(db, "properties"), orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
     all = snap.docs.map(d=> ({id: d.id, ...d.data()}));
-    
-    // دمج مع القديم اللي في localStorage عشان الديمو القديم
-    const localOld = JSON.parse(localStorage.getItem('aqar_properties') || '[]');
-    if(all.length===0 && localOld.length>0) all = localOld;
-
-    render(all);
     document.getElementById('count').innerText = `${all.length} عقار`;
+    render(all);
   }catch(e){
     console.error(e);
-    // fallback لو الـ Rules لسه مقفولة
-    all = JSON.parse(localStorage.getItem('aqar_properties') || '[]');
-    if(all.length===0) grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#666">لا يوجد عقارات - تأكد ان Firestore Rules مفتوحة<br><br><a href="add-property.html" style="background:var(--y);color:#000;padding:8px 20px;border-radius:20px;font-weight:900;font-size:11px">+ أضف أول عقار</a></div>`;
-    else render(all);
+    document.getElementById('grid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#f55">خطأ: ${e.message}<br>تأكد من تفعيل Firestore Rules</div>`;
   }
 }
 
 window.switchTab = function(t){
   document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
-  if(t==='home'){document.getElementById('tab-home').classList.add('active');document.getElementById('aboutSection').style.display='none';document.getElementById('hero').style.display='block';document.getElementById('mainTitle').style.display='flex';document.getElementById('grid').style.display='grid';render(all);}
-  if(t==='about'){document.getElementById('tab-about').classList.add('active');document.getElementById('hero').style.display='none';document.getElementById('aboutSection').style.display='block';document.getElementById('mainTitle').style.display='none';document.getElementById('grid').style.display='none';}
-  if(t==='recent'){document.getElementById('tab-recent').classList.add('active');document.getElementById('aboutSection').style.display='none';document.getElementById('hero').style.display='block';document.getElementById('mainTitle').style.display='flex';document.getElementById('grid').style.display='grid';render(all.slice(0,4));}
+  document.getElementById('aboutSection').style.display='none';
+  document.getElementById('hero').style.display='block';
+  document.getElementById('mainTitle').style.display='flex';
+  document.getElementById('grid').style.display='grid';
+  if(t==='home'){document.getElementById('tab-home').classList.add('active'); render(all);}
+  if(t==='about'){document.getElementById('tab-about').classList.add('active'); document.getElementById('hero').style.display='none'; document.getElementById('aboutSection').style.display='block'; document.getElementById('mainTitle').style.display='none'; document.getElementById('grid').style.display='none';}
+  if(t==='recent'){document.getElementById('tab-recent').classList.add('active'); render(all.slice(0,6));}
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 window.doSearch = function(){
@@ -136,21 +164,20 @@ window.doSearch = function(){
 
 window.render = function(list){
   const grid=document.getElementById('grid');
-  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#666">لا يوجد نتائج</div>';return}
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#666">لا يوجد نتائج<br><a href="index.html" style="color:var(--y)">عرض الكل</a></div>';return}
   grid.innerHTML=list.map(p=>{
-    const imgUrl = p.imageUrl || p.main_image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
+    const imgUrl = p.imageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
     const price=Number(p.price||0).toLocaleString('ar-EG');
     const ownerName=p.ownerName||'مالك العقار';
-    const ownerAvatar=`https://ui-avatars.com/api/?name=${encodeURIComponent(ownerName)}&background=FFD400&color=000&size=40`;
-    const ownerHtml=`<div class="owner-mini"><img src="${p.ownerPhoto||ownerAvatar}"><span>${ownerName}</span></div>`;
-    return `<div class="pcard"><div class="th"><img src="${imgUrl}" loading="lazy"><span class="price">${price} ج.م</span></div><div class="bd">${ownerHtml}<h4>${p.title||'عقار مميز'}</h4><div class="loc"><i class="fa-solid fa-location-dot"></i> ${p.city||'القاهرة'}</div><div class="specs"><span><i class="fa-solid fa-ruler"></i> ${p.area||0} م²</span><span>${p.bathrooms||0} حمام</span><span>${p.bedrooms||0} غرف</span></div><button class="btn-details" onclick="location.href='details.html?id=${p.id}'">عرض التفاصيل →</button></div></div>`
+    const ownerAvatar=p.ownerPhoto||`https://ui-avatars.com/api/?name=${encodeURIComponent(ownerName)}&background=FFD400&color=000&size=40`;
+    return `<div class="pcard"><div class="th"><img src="${imgUrl}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600'"><span class="price">${price} ج.م</span></div><div class="bd"><div class="owner-mini"><img src="${ownerAvatar}"><span>${ownerName}</span></div><h4>${p.title||'عقار مميز'}</h4><div class="loc"><i class="fa-solid fa-location-dot"></i> ${p.city||'القاهرة'}</div><div class="specs"><span><i class="fa-solid fa-ruler"></i> ${p.area||0} م²</span><span>${p.bathrooms||0} حمام</span><span>${p.bedrooms||0} غرف</span></div><button class="btn-details" onclick="location.href='details.html?id=${p.id}'">عرض التفاصيل →</button></div></div>`
   }).join('');
 }
 
-// auth header
 onAuthStateChanged(auth, user=>{
   if(user){
-    document.getElementById('authArea').innerHTML=`<a href="add-property.html" class="btn-y"><i class="fa-solid fa-plus"></i> إضافة</a><a href="profile.html" class="btn-y" style="background:transparent;border:1px solid var(--y);color:var(--y)">${user.displayName||user.email}</a>`;
+    document.getElementById('authArea').innerHTML=`<a href="profile.html" class="btn-o">${user.displayName||'حسابي'}</a><a href="add-property.html" class="btn-y"><i class="fa-solid fa-plus"></i> إضافة</a>`;
+    document.getElementById('addDesk').style.display='flex';
   }
 });
 
