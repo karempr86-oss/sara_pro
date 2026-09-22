@@ -1,46 +1,53 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>تفاصيل العقار - عقارات برو</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{--y:#FFD400;--bg:#07080A;--c:#0E0F12;--b:#1E1F25}
-*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
-body{background:var(--bg);color:#fff}
-.header{height:60px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 3%;position:sticky;top:0}
-.btn{padding:8px 16px;border-radius:20px;font-weight:800;font-size:12px;text-decoration:none}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:#fff;padding-bottom:90px}
+.header{height:60px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:10}
+.btn{padding:8px 14px;border-radius:20px;font-weight:800;font-size:12px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .btn-y{background:var(--y);color:#000}
 .btn-o{border:1px solid var(--y);color:var(--y)}
-.container{max-width:1000px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:1.5fr .9fr;gap:16px}
-@media(max-width:800px){.container{grid-template-columns:1fr}}
-.img-box{background:var(--c);border:1px solid var(--b);border-radius:16px;overflow:hidden}
-.img-box img{width:100%;height:380px;object-fit:cover;display:block}
-.info{background:var(--c);border:1px solid var(--b);border-radius:16px;padding:18px}
+.container{max-width:1100px;margin:0 auto;padding:12px;display:grid;grid-template-columns:1.6fr.9fr;gap:14px}
+.img-box{background:var(--c);border:1px solid var(--b);border-radius:18px;overflow:hidden;position:relative}
+.img-box img{width:100%;height:420px;object-fit:cover;display:block}
+.info{background:var(--c);border:1px solid var(--b);border-radius:18px;padding:18px;height:fit-content;position:sticky;top:72px}
 .price{color:var(--y);font-size:22px;font-weight:900;margin:8px 0}
-.spec{display:flex;gap:12px;margin:12px 0;color:#9A9CA3;font-size:12px}
-.spec span{background:#121316;border:1px solid var(--b);padding:6px 10px;border-radius:10px}
-.owner{display:flex;align-items:center;gap:10px;background:#121316;border:1px solid var(--b);border-radius:12px;padding:10px;margin-top:14px}
-.owner img{width:42px;height:42px;border-radius:50%;border:1px solid var(--y)}
-.whats{width:100%;height:44px;background:#25D366;color:#fff;border:none;border-radius:22px;font-weight:900;margin-top:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.spec{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+.spec span{background:#121316;border:1px solid var(--b);padding:8px 12px;border-radius:12px;font-size:11px;color:#ccc}
+.owner{display:flex;align-items:center;gap:10px;background:#121316;border:1px solid var(--b);border-radius:14px;padding:12px;margin-top:16px}
+.owner img{width:44px;height:44px;border-radius:50%;border:2px solid var(--y);object-fit:cover}
+.whats{width:100%;height:48px;background:#25D366;color:#fff;border:none;border-radius:24px;font-weight:900;margin-top:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px}
+.call{width:100%;height:44px;background:transparent;border:1px solid var(--b);color:#fff;border-radius:24px;font-weight:700;margin-top:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+
+@media(max-width:900px){
+ .container{grid-template-columns:1fr;gap:10px;padding:10px}
+ .img-box img{height:260px}
+ .info{position:relative;top:auto}
+ .whats{position:fixed;bottom:14px;left:12px;right:12px;width:auto;z-index:999;box-shadow:0 8px 24px rgba(37,211,102,.4)}
+ .call{margin-bottom:70px}
+}
 </style>
 </head>
 <body>
 <div class="header">
-<a href="index.html" class="btn-o">← رجوع</a>
-<div style="color:var(--y);font-weight:900">عقارات برو</div>
-<a href="profile.html" class="btn-y">الملف</a>
+<a href="index.html" class="btn-o"><i class="fa-solid fa-arrow-right"></i> رجوع</a>
+<div style="color:var(--y);font-weight:900"><i class="fa-solid fa-house-chimney"></i> عقارات برو</div>
+<a href="profile.html" class="btn-y">حسابي</a>
 </div>
 
 <div class="container" id="content">
-<div style="grid-column:1/-1;text-align:center;padding:60px;color:#666">جاري تحميل العقار...</div>
+<div style="grid-column:1/-1;text-align:center;padding:80px;color:#666"><i class="fa-solid fa-spinner fa-spin" style="font-size:28px;display:block;margin-bottom:10px"></i>جاري تحميل العقار...</div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",
   authDomain: "hack1-cb0f2.firebaseapp.com",
@@ -51,58 +58,39 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 const id = new URLSearchParams(location.search).get('id');
 const content = document.getElementById('content');
-
-if(!id){ content.innerHTML = 'لا يوجد ID'; }
-
 async function load(){
   try{
-    const ref = doc(db, "properties", id);
-    const snap = await getDoc(ref);
-    if(!snap.exists()){
-      // جرب localStorage
-      const local = JSON.parse(localStorage.getItem('aqar_properties')||'[]').find(p=>p.id==id);
-      if(local) return render(local);
-      content.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:#f55">العقار غير موجود</div>';
-      return;
-    }
-    render({id: snap.id, ...snap.data()});
-  }catch(e){
-    console.error(e);
-    content.innerHTML = 'خطأ: '+e.message;
-  }
-}
-
-function render(p){
-  const img = p.imageUrl || p.main_image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800';
-  const price = Number(p.price||0).toLocaleString('ar-EG');
-  content.innerHTML = `
-    <div class="img-box"><img src="${img}"></div>
-    <div class="info">
-      <h2 style="font-weight:900">${p.title||'عقار مميز'}</h2>
-      <div style="color:#888;font-size:12px;margin-top:4px"><i class="fa-solid fa-location-dot"></i> ${p.city||''}</div>
-      <div class="price">${price} ج.م - ${p.deal||'للبيع'}</div>
-      <div class="spec">
-        <span><i class="fa-solid fa-ruler"></i> ${p.area||0} م²</span>
-        <span>${p.bedrooms||0} غرف</span>
-        <span>${p.bathrooms||0} حمام</span>
-      </div>
-      <p style="font-size:12px;color:#bbb;line-height:1.9;margin-top:10px">${p.desc||'لا يوجد وصف'}</p>
-      
-      <div class="owner">
-        <img src="${p.ownerPhoto||'https://ui-avatars.com/api/?name='+encodeURIComponent(p.ownerName||'مالك')+'&background=FFD400&color=000'}">
-        <div>
-          <div style="font-weight:800;font-size:12px">${p.ownerName||'مالك العقار'}</div>
-          <div style="font-size:10px;color:#777">${p.ownerEmail||''}</div>
+    const snap = await getDoc(doc(db,"properties",id));
+    if(!snap.exists()){ content.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:#f55">العقار غير موجود</div>'; return;}
+    const p = {id:snap.id,...snap.data()};
+    const img = p.imageUrl || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800';
+    const price = Number(p.price||0).toLocaleString('ar-EG');
+    const phoneClean = (p.phone||'').replace(/[^0-9]/g,'');
+    content.innerHTML = `
+      <div class="img-box"><img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'"></div>
+      <div class="info">
+        <h2 style="font-weight:900;line-height:1.3">${p.title||'عقار مميز'}</h2>
+        <div style="color:#888;font-size:12px;margin-top:6px"><i class="fa-solid fa-location-dot"></i> ${p.city||'القاهرة'} ${p.area? ' • '+p.area+' م²':''}</div>
+        <div class="price">${price} ج.م</div>
+        <div class="spec">
+          <span><i class="fa-solid fa-ruler"></i> ${p.area||0} م²</span>
+          <span><i class="fa-solid fa-bed"></i> ${p.bedrooms||0} غرف</span>
+          <span><i class="fa-solid fa-bath"></i> ${p.bathrooms||0} حمام</span>
+          <span style="background:var(--y);color:#000;font-weight:800">${p.deal||'للبيع'}</span>
         </div>
+        <p style="font-size:12px;color:#bbb;line-height:2;margin-top:12px;background:#121316;border:1px solid var(--b);border-radius:12px;padding:12px">${p.desc||'لا يوجد وصف تفصيلي لهذا العقار.'}</p>
+        <div class="owner" onclick="location.href='profile.html?id=${p.ownerId}'" style="cursor:pointer">
+          <img src="${p.ownerPhoto||'https://ui-avatars.com/api/?name='+encodeURIComponent(p.ownerName||'مالك')+'&background=FFD400&color=000'}">
+          <div><div style="font-weight:800;font-size:12px">${p.ownerName||'مالك العقار'}</div><div style="font-size:10px;color:#777">اضغط لعرض ملفه</div></div>
+          <i class="fa-solid fa-chevron-left" style="margin-right:auto;color:#444"></i>
+        </div>
+        <button class="whats" onclick="window.open('https://wa.me/${phoneClean}?text=مرحبا مهتم بعقار ${encodeURIComponent(p.title||'')}', '_blank')"><i class="fa-brands fa-whatsapp"></i> واتساب - ${p.phone||''}</button>
+        <button class="call" onclick="location.href='tel:${p.phone||''}'"><i class="fa-solid fa-phone"></i> اتصال مباشر</button>
       </div>
-
-      <button class="whats" onclick="window.open('https://wa.me/${(p.phone||'').replace(/[^0-9]/g,'')}?text=السلام عليكم مهتم بعقار ${encodeURIComponent(p.title||'')}', '_blank')"><i class="fa-brands fa-whatsapp"></i> تواصل واتساب - ${p.phone||''}</button>
-      <a href="tel:${p.phone||''}" style="display:block;text-align:center;margin-top:8px;color:#888;font-size:11px">اتصال مباشر</a>
-    </div>
-  `;
+    `;
+  }catch(e){ content.innerHTML='خطأ: '+e.message; }
 }
 load();
 </script>
