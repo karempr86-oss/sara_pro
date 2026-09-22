@@ -2,160 +2,111 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الملف الشخصي - PocketBase</title>
+<title>ملفي - عقارات برو</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-:root{--y:#FFD400;--bg:#07080A;--b:#1E1F25;--card:#0E0F12}
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo'}
+:root{--y:#FFD400;--bg:#07080A;--c:#0E0F12;--b:#1E1F25}
+*{font-family:'Cairo',sans-serif;box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:#fff}
-.header{height:64px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 3%;position:sticky;top:0;z-index:10}
-.logo{color:var(--y);font-weight:900}
-.wrap{max-width:900px;margin:20px auto;padding:0 16px}
-.head{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:20px;display:flex;gap:16px;align-items:center}
-.head img{width:90px;height:90px;border-radius:50%;border:2px solid var(--y);object-fit:cover}
-.btn-y{background:var(--y);color:#000;padding:8px 16px;border-radius:20px;font-size:12px;font-weight:800;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.btn-o{border:1px solid var(--y);color:var(--y);padding:8px 16px;border-radius:20px;font-size:12px;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.edit-box{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.edit-box input{background:#121316;border:1px solid var(--b);border-radius:20px;padding:8px 12px;color:#fff;outline:none;font-size:12px;min-width:180px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
-.pc{background:#121316;border:1px solid var(--b);border-radius:12px;overflow:hidden;cursor:pointer;transition:.3s}
-.pc:hover{border-color:var(--y)}
-.pc img{width:100%;height:130px;object-fit:cover}
-@media(max-width:768px){.grid{grid-template-columns:1fr 1fr}.head{flex-direction:column;text-align:center}}
+.header{height:60px;background:#08090B;border-bottom:1px solid #15161B;display:flex;align-items:center;justify-content:space-between;padding:0 3%}
+.card{max-width:700px;margin:20px auto;background:var(--c);border:1px solid var(--b);border-radius:16px;padding:20px;text-align:center}
+.avatar{width:80px;height:80px;border-radius:50%;border:2px solid var(--y);margin:auto;display:block;object-fit:cover}
+.grid{max-width:1000px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.grid{grid-template-columns:1fr 1fr}}
+.pcard{background:#0E0F12;border:1px solid var(--b);border-radius:14px;overflow:hidden}
+.pcard img{width:100%;height:140px;object-fit:cover}
+.pcard .bd{padding:10px}
+.btn{padding:8px 14px;border-radius:20px;font-weight:800;font-size:11px;border:none;cursor:pointer}
+.btn-y{background:var(--y);color:#000}
+.btn-r{background:#ff3b3b;color:#fff}
 </style>
 </head>
 <body>
-<div class="header"><a href="index.html" style="color:#888;font-size:12px">← الرئيسية</a><div class="logo">عقارات برو</div><div></div></div>
-<div class="wrap">
-<div class="head" id="head">جاري التحميل من PocketBase...</div>
-<h3 style="margin-top:20px;font-weight:900">عقاراته (<span id="cnt">0</span>)</h3>
-<div class="grid" id="grid"></div>
+<div class="header">
+<a href="index.html" style="color:#888;font-size:12px;text-decoration:none">← الرئيسية</a>
+<div style="color:var(--y);font-weight:900">ملفي الشخصي</div>
+<button onclick="logout()" style="background:transparent;border:1px solid #333;color:#777;padding:6px 12px;border-radius:20px;font-size:11px;cursor:pointer">خروج</button>
 </div>
 
-<script>
-const PB = `http://${location.hostname}:8090`;
-// auth من localStorage
-let auth = {};
-try{ auth = JSON.parse(localStorage.getItem('pocketbase_auth')||'{}'); }catch{}
-let token = auth.token || localStorage.getItem('pb_token') || '';
-let me = auth.model || {};
-try{ if(!me.id) me = JSON.parse(localStorage.getItem('pb_user')||'null') || {}; }catch{}
+<div class="card" id="userCard">جاري التحميل...</div>
 
-const qId = new URLSearchParams(location.search).get('id');
-const targetId = qId || me.id;
+<h3 style="max-width:1000px;margin:20px auto 10px;padding:0 16px">عقاراتي (<span id="count">0</span>)</h3>
+<div class="grid" id="myGrid"></div>
 
-async function load(){
-  const head = document.getElementById('head');
-  if(!targetId){
-    head.innerHTML=`مش مسجل دخول <a href="login.html" style="color:var(--y)">دخول</a>`;
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",
+  authDomain: "hack1-cb0f2.firebaseapp.com",
+  projectId: "hack1-cb0f2",
+  storageBucket: "hack1-cb0f2.firebasestorage.app",
+  messagingSenderId: "926645598259",
+  appId: "1:926645598259:web:eabe7d3f588ee0b26f0b46"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const userCard = document.getElementById('userCard');
+const myGrid = document.getElementById('myGrid');
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    const local = JSON.parse(localStorage.getItem('aqar_user')||localStorage.getItem('user')||'null');
+    if(!local){ location.href='login.html'; return; }
+    userCard.innerHTML = `<img class="avatar" src="https://ui-avatars.com/api/?name=${local.name||'User'}&background=FFD400&color=000"><h3 style="margin-top:10px">${local.name||local.email}</h3><p style="color:#777;font-size:11px">${local.email||''}</p>`;
     return;
   }
+  userCard.innerHTML = `
+    <img class="avatar" src="${user.photoURL||'https://ui-avatars.com/api/?name='+encodeURIComponent(user.displayName||'User')+'&background=FFD400&color=000'}">
+    <h3 style="margin-top:10px">${user.displayName||'مستخدم'}</h3>
+    <p style="color:#777;font-size:11px">${user.email}</p>
+    <p style="color:#555;font-size:10px;margin-top:6px">${user.uid}</p>
+  `;
+  loadMyProps(user.uid);
+});
+
+async function loadMyProps(uid){
+  myGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#666">جاري تحميل عقاراتك...</div>';
   try{
-    // 1. جيب بيانات اليوزر
-    const r = await fetch(`${PB}/api/collections/users/records/${targetId}`);
-    if(!r.ok) throw new Error('user not found');
-    const u = await r.json();
-    const name = u.name || u.username || u.email.split('@')[0];
-    const av = u.avatar ? `${PB}/api/files/users/${u.id}/${u.avatar}?thumb=200x200` : `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=FFD400&color=000&size=80`;
-    const isMe = me.id === u.id;
-
-    head.innerHTML = `
-      <img id="avatarImg" src="${av}">
-      <div style="flex:1">
-        <h2 id="nameTxt" style="font-weight:900">${name}</h2>
-        <p style="color:#888;font-size:11px">${u.email||''}</p>
-        ${isMe ? `
-          <div class="edit-box">
-            <input id="newName" value="${name}" placeholder="الاسم الجديد">
-            <button class="btn-y" onclick="updateName()"><i class="fa-solid fa-check"></i> حفظ الاسم</button>
+    const q = query(collection(db, "properties"), where("ownerId", "==", uid));
+    const snap = await getDocs(q);
+    const list = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    document.getElementById('count').innerText = list.length;
+    if(!list.length){ myGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#666;padding:30px">لم تنشر أي عقار بعد<br><a href="add-property.html" style="color:var(--y)">+ أضف عقار</a></div>'; return; }
+    myGrid.innerHTML = list.map(p=>`
+      <div class="pcard">
+        <img src="${p.imageUrl||'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400'}">
+        <div class="bd">
+          <div style="font-weight:800;font-size:12px">${p.title||''}</div>
+          <div style="font-size:11px;color:var(--y);margin-top:4px">${Number(p.price||0).toLocaleString()} ج.م</div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <button class="btn btn-y" style="flex:1" onclick="location.href='details.html?id=${p.id}'">عرض</button>
+            <button class="btn btn-r" onclick="delProp('${p.id}')">حذف</button>
           </div>
-          <label class="btn-o" style="margin-top:8px;display:inline-block;cursor:pointer">
-            <i class="fa-solid fa-camera"></i> تغيير صورة الملف الشخصي
-            <input type="file" hidden id="avFile" accept="image/*" onchange="updateAvatar(this)">
-          </label>
-          <div style="margin-top:10px;color:#666;font-size:10px">الصورة هتتحدث في PocketBase تلقائي</div>
-        ` : `
-          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn-y" onclick="goChat('${u.id}')"><i class="fa-solid fa-paper-plane"></i> مراسلة</button>
-            <button class="btn-o" onclick="goChat('${u.id}')"><i class="fa-solid fa-comments"></i> فتح الشات</button>
-            <a href="https://wa.me/${u.phone||''}" target="_blank" class="btn-o"><i class="fa-brands fa-whatsapp"></i> واتساب</a>
-          </div>
-        `}
-        <div style="margin-top:8px;color:#888;font-size:11px"><b id="pc" style="color:#fff">0</b> عقار منشور</div>
+        </div>
       </div>
-    `;
-
-    // 2. جيب عقاراته
-    const r2 = await fetch(`${PB}/api/collections/properties/records?filter=owner="${u.id}"&perPage=200&sort=-created`);
-    const d2 = await r2.json();
-    document.getElementById('cnt').innerText = d2.items.length;
-    document.getElementById('pc').innerText = d2.items.length;
-
-    document.getElementById('grid').innerHTML = d2.items.map(p=>{
-      const img = p.main_image ? `${PB}/api/files/properties/${p.id}/${p.main_image}?thumb=400x300` : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600';
-      return `<div class="pc" onclick="location.href='details.html?id=${p.id}'">
-        <img src="${img}"><div style="padding:8px;text-align:center;font-size:12px">${p.title||'عقار'}</div>
-        ${isMe? `<div style="padding:6px;text-align:center"><button onclick="event.stopPropagation();delProp('${p.id}')" style="background:#ff44441a;color:#f55;border:none;padding:4px 10px;border-radius:12px;font-size:10px;cursor:pointer">حذف</button></div>`:``}
-      </div>`;
-    }).join('') || '<div style="grid-column:1/-1;text-align:center;color:#666;padding:20px">لا يوجد عقارات</div>';
-
+    `).join('');
   }catch(e){
-    head.innerHTML=`<span style="color:#f55">خطأ: ${e.message} - تأكد ان PocketBase شغال على ${PB}</span>`;
+    myGrid.innerHTML = 'خطأ: '+e.message;
   }
 }
 
-window.updateName = async ()=>{
-  const nn = document.getElementById('newName').value.trim();
-  if(!nn) return alert('اكتب الاسم');
-  if(!token) return alert('سجل دخول تاني');
-  const fd = new FormData(); fd.append('name', nn);
-  const res = await fetch(`${PB}/api/collections/users/records/${me.id}`, {
-    method:'PATCH', headers:{'Authorization': token}, body:fd
-  });
-  if(res.ok){
-    const data = await res.json();
-    localStorage.setItem('pb_user', JSON.stringify(data));
-    auth.model=data; localStorage.setItem('pocketbase_auth', JSON.stringify(auth));
-    document.getElementById('nameTxt').innerText=nn;
-    alert('✅ تم تغيير الاسم');
-    location.reload();
-  }else{
-    alert('فشل: '+(await res.text()));
-  }
-};
+window.delProp = async function(id){
+  if(!confirm('تحذف العقار؟')) return;
+  await deleteDoc(doc(db, "properties", id));
+  location.reload();
+}
 
-window.updateAvatar = async (inp)=>{
-  if(!inp.files[0]) return;
-  if(!token) return alert('سجل دخول تاني');
-  const fd = new FormData(); fd.append('avatar', inp.files[0]);
-  const res = await fetch(`${PB}/api/collections/users/records/${me.id}`, {
-    method:'PATCH', headers:{'Authorization': token}, body:fd
-  });
-  if(res.ok){
-    const data = await res.json();
-    localStorage.setItem('pb_user', JSON.stringify(data));
-    alert('✅ تم تغيير الصورة');
-    location.reload();
-  }else{
-    alert('فشل: '+(await res.text()));
-  }
-};
-
-window.delProp = async (id)=>{
-  if(!confirm('تمسح العقار؟')) return;
-  const res = await fetch(`${PB}/api/collections/properties/records/${id}`, {
-    method:'DELETE', headers:{'Authorization': token}
-  });
-  if(res.ok){ alert('تم المسح'); load(); } else alert('فشل المسح');
-};
-
-window.goChat = (uid)=>{
-  localStorage.setItem('chat_target', uid);
-  location.href=`chat.html?id=${encodeURIComponent(uid)}`;
-};
-
-load();
+window.logout = async function(){
+  await signOut(auth);
+  localStorage.removeItem('aqar_user'); localStorage.removeItem('user');
+  location.href='index.html';
+}
 </script>
 </body>
 </html>
