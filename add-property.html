@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,175 +7,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
-        :root {
-            --y: #FFD400;
-            --bg: #07080A;
-            --card: #0E0F12;
-            --b: #1E1F25
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Cairo', sans-serif
-        }
-
-        body {
-            background: var(--bg);
-            color: #fff;
-            min-height: 100vh
-        }
-
-        .header {
-            height: 60px;
-            background: #08090B;
-            border-bottom: 1px solid #15161B;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 3%;
-            position: sticky;
-            top: 0;
-            z-index: 10
-        }
-
-        .header a {
-            color: #888;
-            font-size: 12px;
-            text-decoration: none
-        }
-
-        .logo {
-            color: var(--y);
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            gap: 8px
-        }
-
-        .form {
-            max-width: 620px;
-            margin: 20px auto;
-            background: var(--card);
-            border: 1px solid var(--b);
-            border-radius: 18px;
-            padding: 22px
-        }
-
-        .form h2 {
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 4px
-        }
-
-        .form p {
-            text-align: center;
-            color: #666;
-            font-size: 11px;
-            margin-bottom: 16px
-        }
-
-        label {
-            font-size: 11px;
-            color: #888;
-            display: block;
-            margin-top: 14px;
-            margin-bottom: 4px
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            background: #121316;
-            border: 1px solid var(--b);
-            border-radius: 12px;
-            padding: 12px;
-            color: #fff;
-            outline: none;
-            font-size: 13px
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            border-color: var(--y)
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px
-        }
-
-        .upload-box {
-            border: 2px dashed #2A2B33;
-            border-radius: 14px;
-            padding: 18px;
-            text-align: center;
-            margin-top: 8px;
-            cursor: pointer;
-            background: #121316
-        }
-
-        .upload-box:hover {
-            border-color: var(--y)
-        }
-
-        #preview {
-            width: 100%;
-            height: 180px;
-            border-radius: 12px;
-            object-fit: cover;
-            margin-top: 10px;
-            display: none;
-            border: 1px solid var(--b)
-        }
-
-        .btn {
-            width: 100%;
-            height: 48px;
-            background: var(--y);
-            color: #000;
-            border: none;
-            border-radius: 24px;
-            font-weight: 900;
-            font-size: 14px;
-            margin-top: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px
-        }
-
-        .btn:disabled {
-            opacity: .6
-        }
-
-        #msg {
-            margin-top: 14px;
-            text-align: center;
-            font-size: 12px;
-            min-height: 18px;
-            white-space: pre-wrap;
-            word-break: break-word
-        }
-
-        @media(max-width:600px) {
-            .form {
-                margin: 10px;
-                padding: 16px
-            }
-
-            .row {
-                grid-template-columns: 1fr 1fr
-            }
-        }
+        :root { --y: #FFD400; --bg: #07080A; --card: #0E0F12; --b: #1E1F25 }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif }
+        body { background: var(--bg); color: #fff; min-height: 100vh }
+       .header { height: 60px; background: #08090B; border-bottom: 1px solid #15161B; display: flex; align-items: center; justify-content: space-between; padding: 0 3%; position: sticky; top: 0; z-index: 10 }
+       .header a { color: #888; font-size: 12px; text-decoration: none }
+       .logo { color: var(--y); font-weight: 900; display: flex; align-items: center; gap: 8px }
+       .form { max-width: 620px; margin: 20px auto; background: var(--card); border: 1px solid var(--b); border-radius: 18px; padding: 22px }
+       .form h2 { font-weight: 900; text-align: center; margin-bottom: 4px }
+       .form p { text-align: center; color: #666; font-size: 11px; margin-bottom: 16px }
+        label { font-size: 11px; color: #888; display: block; margin-top: 14px; margin-bottom: 4px }
+        input, textarea, select { width: 100%; background: #121316; border: 1px solid var(--b); border-radius: 12px; padding: 12px; color: #fff; outline: none; font-size: 13px }
+        input:focus, textarea:focus, select:focus { border-color: var(--y) }
+       .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px }
+       .upload-box { border: 2px dashed #2A2B33; border-radius: 14px; padding: 18px; text-align: center; margin-top: 8px; cursor: pointer; background: #121316 }
+       .upload-box:hover { border-color: var(--y) }
+        #preview { width: 100%; height: 180px; border-radius: 12px; object-fit: cover; margin-top: 10px; display: none; border: 1px solid var(--b) }
+       .btn { width: 100%; height: 48px; background: var(--y); color: #000; border: none; border-radius: 24px; font-weight: 900; font-size: 14px; margin-top: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px }
+       .btn:disabled { opacity:.6 }
+        #msg { margin-top: 14px; text-align: center; font-size: 12px; min-height: 18px; white-space: pre-wrap }
+        @media(max-width:600px) {.form { margin: 10px; padding: 16px }.row { grid-template-columns: 1fr 1fr } }
     </style>
 </head>
-
 <body>
     <div class="header">
         <a href="index.html">← رجوع</a>
@@ -190,14 +42,9 @@
         <label>المدينة *</label>
         <select id="city">
             <option value="">اختار المدينة</option>
-            <option>القاهرة</option>
-            <option>الجيزة</option>
-            <option>الإسكندرية</option>
-            <option>المنصورة</option>
-            <option>طنطا</option>
-            <option>أسوان</option>
-            <option>الساحل الشمالي</option>
-            <option>القليوبية</option>
+            <option>القاهرة</option><option>الجيزة</option><option>الإسكندرية</option>
+            <option>المنصورة</option><option>طنطا</option><option>أسوان</option>
+            <option>الساحل الشمالي</option><option>القليوبية</option>
         </select>
         <label>السعر بالجنيه *</label><input id="price" type="number" placeholder="1500000">
         <div class="row">
@@ -210,18 +57,63 @@
         <label>الصورة الرئيسية</label>
         <div class="upload-box" onclick="document.getElementById('main_image').click()">
             <i class="fa-solid fa-cloud-arrow-up" style="color:var(--y);font-size:26px"></i>
-            <div style="font-size:12px;margin-top:6px">اضغط لاختيار صورة (اختياري في الديمو)</div>
+            <div style="font-size:12px;margin-top:6px">اضغط لاختيار صورة</div>
+            <div id="fileName" style="font-size:10px;color:var(--y);margin-top:4px"></div>
         </div>
-        <input id="main_image" type="file" accept="image/*" hidden onchange="showPreview(this)">
+        <input id="main_image" type="file" accept="image/*" hidden>
         <img id="preview">
-        <button class="btn" id="pubBtn" onclick="publish()"><i class="fa-solid fa-rocket"></i> نشر العقار الآن</button>
+        <button class="btn" id="pubBtn"><i class="fa-solid fa-rocket"></i> نشر العقار الآن</button>
         <div id="msg"></div>
     </div>
-    <script>
-      // حط الـ API Key بتاعك هنا
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",
+  authDomain: "hack1-cb0f2.firebaseapp.com",
+  projectId: "hack1-cb0f2",
+  storageBucket: "hack1-cb0f2.firebasestorage.app",
+  messagingSenderId: "926645598259",
+  appId: "1:926645598259:web:eabe7d3f588ee0b26f0b46",
+  measurementId: "G-0ESMXPYWXC"
+};
+
 const IMGBB_KEY = "4db587bdabc9b335c341251460d0d6e2";
 
-async function uploadImage(file){
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+onAuthStateChanged(auth, user => {
+  currentUser = user;
+  if(!user){
+    // لو مش مسجل دخول وديه للوجين
+    // location.href = 'login.html';
+  }
+});
+
+const mainImage = document.getElementById('main_image');
+const preview = document.getElementById('preview');
+const fileName = document.getElementById('fileName');
+
+mainImage.addEventListener('change', function(){
+  const file = this.files[0];
+  if(file){
+    fileName.innerText = file.name;
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+async function uploadToImgBB(file){
   const form = new FormData();
   form.append("image", file);
   const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, {
@@ -229,21 +121,68 @@ async function uploadImage(file){
     body: form
   });
   const data = await res.json();
-  return data.data.url; // ده لينك الصورة
+  if(!data.success) throw new Error("فشل رفع الصورة");
+  return data.data.url;
 }
 
-// وانت بتحفظ العقار:
-const file = document.getElementById('image').files[0];
-let imageUrl = "";
-if(file){
-  imageUrl = await uploadImage(file); // مجاني
-}
-await addDoc(collection(db, "properties"), {
-  title, price, city,
-  imageUrl, // بنحفظ اللينك بس في Firebase
-  createdAt: serverTimestamp()
+window.publish = async function(){}
+
+document.getElementById('pubBtn').addEventListener('click', async ()=>{
+  const title = document.getElementById('title').value.trim();
+  const city = document.getElementById('city').value;
+  const price = document.getElementById('price').value.trim();
+  const area = document.getElementById('area').value.trim();
+  const bedrooms = document.getElementById('bedrooms').value.trim();
+  const bathrooms = document.getElementById('bathrooms').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const desc = document.getElementById('desc').value.trim();
+  const file = mainImage.files[0];
+
+  const btn = document.getElementById('pubBtn');
+  const msg = document.getElementById('msg');
+
+  if(!title ||!city ||!price ||!phone){
+    msg.style.color = '#f55';
+    msg.innerText = 'اكمل البيانات المطلوبة *';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
+  msg.style.color = '#888';
+  msg.innerText = file? 'جاري رفع الصورة على ImgBB (مجاني)...' : 'جاري حفظ العقار...';
+
+  try{
+    let imageUrl = "";
+    if(file){
+      imageUrl = await uploadToImgBB(file);
+    }
+
+    const user = currentUser || JSON.parse(localStorage.getItem('user') || '{}');
+
+    await addDoc(collection(db, "properties"), {
+      title, city, price: Number(price), area: area?Number(area):0,
+      bedrooms: bedrooms?Number(bedrooms):0, bathrooms: bathrooms?Number(bathrooms):0,
+      phone, desc, imageUrl,
+      ownerId: user.uid || "guest",
+      ownerName: user.displayName || user.name || "مستخدم",
+      ownerEmail: user.email || "",
+      ownerPhoto: user.photoURL || user.photo || "",
+      createdAt: serverTimestamp()
+    });
+
+    msg.style.color = '#0f0';
+    msg.innerText = 'تم نشر العقار بنجاح ✅';
+    setTimeout(()=> location.href = 'index.html', 1200);
+
+  }catch(e){
+    console.error(e);
+    msg.style.color = '#f55';
+    msg.innerText = 'خطأ: ' + e.message;
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-rocket"></i> نشر العقار الآن';
+  }
 });
-    </script>
+</script>
 </body>
-
 </html>
