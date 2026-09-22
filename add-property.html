@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>إضافة عقار - AL TAKRURY</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -10,6 +10,8 @@
 *{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{background:var(--black);color:#fff;padding-bottom:90px}
 .header{height:60px;background:rgba(5,5,7,.96);border-bottom:1px solid rgba(212,175,55,.2);display:flex;align-items:center;justify-content:space-between;padding:0 14px;position:sticky;top:0;z-index:10}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-img{height:38px;width:auto;max-width:150px;object-fit:contain;display:block}
 .btn{padding:8px 16px;border-radius:22px;font-weight:800;font-size:11px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;border:none;cursor:pointer}
 .btn-gold{background:linear-gradient(90deg,var(--gold),var(--gold2));color:#000}
 .btn-o{border:1px solid var(--gold);color:var(--gold);background:transparent}
@@ -29,15 +31,15 @@ body{background:var(--black);color:#fff;padding-bottom:90px}
 </style>
 </head>
 <body>
-<div class="header"><a href="index.html" class="btn btn-o"><i class="fa-solid fa-house"></i> AL TAKRURY</a><div style="color:var(--gold);font-weight:900">إضافة عقار</div><a href="profile.html" class="btn btn-gold" id="userBtn">حسابي</a></div>
+<div class="header"><a href="index.html" class="btn btn-o"><i class="fa-solid fa-house"></i> AL TAKRURY</a><div class="logo"><img src="logo.png" class="logo-img" alt="AL TAKRURY"></div><a href="profile.html" class="btn btn-gold" id="userBtn">حسابي</a></div>
 <div class="wrap"><div class="card"><h2 style="font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:8px"><i class="fa-solid fa-plus" style="color:var(--gold)"></i> بيانات العقار - AL TAKRURY</h2>
-<div class="f"><label>صور العقار - ImgBB مجانا</label><div class="upload" onclick="document.getElementById('fileInp').click()"><i class="fa-solid fa-cloud-arrow-up"></i><b style="font-size:13px">اضغط لرفع الصور</b><small style="color:#666;font-size:10px;display:block;margin-top:4px">أول صورة هي الرئيسية - الكروت هتكون مظبوطة</small><input type="file" id="fileInp" hidden accept="image/*" multiple></div><div class="preview" id="preview"></div><div class="progress" id="progWrap"><div id="prog"></div></div></div>
-<div class="f"><label>عنوان العقار</label><input id="title" placeholder="مثال: شقة فاخرة - حدائق الهرم - AL TAKRURY"></div>
+<div class="f"><label>صور العقار</label><div class="upload" onclick="document.getElementById('fileInp').click()"><i class="fa-solid fa-cloud-arrow-up"></i><b style="font-size:13px">اضغط لرفع الصور</b><small style="color:#666;font-size:10px;display:block;margin-top:4px">أول صورة هي الرئيسية</small><input type="file" id="fileInp" hidden accept="image/*" multiple></div><div class="preview" id="preview"></div><div class="progress" id="progWrap"><div id="prog"></div></div></div>
+<div class="f"><label>عنوان العقار</label><input id="title" placeholder="مثال: شقة فاخرة - حدائق الهرم"></div>
 <div class="row"><div class="f"><label>المدينة</label><select id="city"><option>حدائق الهرم</option><option>القاهرة</option><option>الجيزة</option><option>أكتوبر</option><option>الشيخ زايد</option></select></div><div class="f"><label>نوع الصفقة</label><select id="deal"><option>للبيع</option><option>للإيجار</option></select></div></div>
 <div class="row"><div class="f"><label>السعر</label><input id="price" type="number" placeholder="1000000"></div><div class="f"><label>المساحة</label><input id="area" type="number" placeholder="120"></div></div>
 <div class="row"><div class="f"><label>غرف</label><input id="beds" type="number" value="3"></div><div class="f"><label>حمامات</label><input id="baths" type="number" value="2"></div></div>
 <div class="row"><div class="f"><label>واتساب</label><input id="phone" value="01038204417"></div><div class="f"><label>نوع العقار</label><select id="type"><option>شقة</option><option>فيلا</option><option>محل</option><option>مكتب</option></select></div></div>
-<div class="f"><label>الوصف</label><textarea id="desc" placeholder="تفاصيل العقار من التكروري..."></textarea></div>
+<div class="f"><label>الوصف</label><textarea id="desc" placeholder="تفاصيل العقار..."></textarea></div>
 <button class="submit" id="submitBtn"><i class="fa-solid fa-rocket"></i> نشر في AL TAKRURY الآن</button><div id="msg" style="text-align:center;margin-top:12px;font-size:12px"></div></div></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -50,7 +52,7 @@ let currentUser=null;let uploadedUrls=[];
 onAuthStateChanged(auth,user=>{currentUser=user;if(!user){const local=JSON.parse(localStorage.getItem('aqar_user')||'{}');if(!local.email){location.href='login.html';return;}currentUser={uid:local.id||'local',displayName:local.name,email:local.email,photoURL:null};}document.getElementById('userBtn').innerText=currentUser.displayName||'حسابي';});
 const fileInp=document.getElementById('fileInp');const preview=document.getElementById('preview');const progWrap=document.getElementById('progWrap');const prog=document.getElementById('prog');
 fileInp.addEventListener('change',async e=>{const files=[...e.target.files];if(!files.length) return;preview.innerHTML='';uploadedUrls=[];progWrap.style.display='block';for(let i=0;i<files.length;i++){const file=files[i];const img=document.createElement('img');img.src=URL.createObjectURL(file);preview.appendChild(img);try{const fd=new FormData();fd.append("image",file);const res=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:"POST",body:fd});const data=await res.json();if(data.success){uploadedUrls.push(data.data.url);img.style.border='2px solid #25D366';}}catch(err){}prog.style.width=Math.round(((i+1)/files.length)*100)+'%';}document.getElementById('msg').innerHTML=`<span style="color:#25D366">✅ تم رفع ${uploadedUrls.length} صورة</span>`;});
-document.getElementById('submitBtn').addEventListener('click',async()=>{const btn=document.getElementById('submitBtn');const msg=document.getElementById('msg');const title=document.getElementById('title').value.trim();const price=document.getElementById('price').value;if(!title||!price){alert('اكتب العنوان والسعر');return;}if(!uploadedUrls.length){alert('ارفع صورة');return;}btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر...';try{const docData={title,city:document.getElementById('city').value,deal:document.getElementById('deal').value,price:Number(price),area:Number(document.getElementById('area').value||0),bedrooms:Number(document.getElementById('beds').value||0),bathrooms:Number(document.getElementById('baths').value||0),phone:document.getElementById('phone').value,type:document.getElementById('type').value,desc:document.getElementById('desc').value,imageUrl:uploadedUrls[0],images:uploadedUrls,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email,ownerEmail:currentUser.email||'',ownerPhoto:currentUser.photoURL||'',createdAt:serverTimestamp()};const ref=await addDoc(collection(db,"properties"),docData);msg.innerHTML='✅ تم النشر في AL TAKRURY!';setTimeout(()=>location.href='index.html',1000);}catch(e){msg.innerHTML=`<span style="color:#f55">${e.message}</span>`;btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-rocket"></i> نشر الآن';}});
+document.getElementById('submitBtn').addEventListener('click',async()=>{const btn=document.getElementById('submitBtn');const msg=document.getElementById('msg');const title=document.getElementById('title').value.trim();const price=document.getElementById('price').value;if(!title||!price){alert('اكتب العنوان والسعر');return;}if(!uploadedUrls.length){alert('ارفع صورة');return;}btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> جاري النشر...';try{const docData={title,city:document.getElementById('city').value,deal:document.getElementById('deal').value,price:Number(price),area:Number(document.getElementById('area').value||0),bedrooms:Number(document.getElementById('beds').value||0),bathrooms:Number(document.getElementById('baths').value||0),phone:document.getElementById('phone').value,type:document.getElementById('type').value,desc:document.getElementById('desc').value,imageUrl:uploadedUrls[0],images:uploadedUrls,ownerId:currentUser.uid,ownerName:currentUser.displayName||currentUser.email,ownerEmail:currentUser.email||'',ownerPhoto:currentUser.photoURL||'',createdAt:serverTimestamp()};const ref=await addDoc(collection(db,"properties"),docData);msg.innerHTML='✅ تم النشر';setTimeout(()=>location.href='index.html',1000);}catch(e){msg.innerHTML=`<span style="color:#f55">${e.message}</span>`;btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-rocket"></i> نشر الآن';}});
 </script>
 </body>
 </html>
