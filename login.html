@@ -4,23 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>دخول - AL TAKRURY - التكروري للاستثمار العقاري</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{--y:#D4AF37;--bg:#050507;--c:#0E0E10;--b:#1E1F25}
-*{box-sizing:border-box;font-family:'Cairo'}
-body{background:var(--bg);color:#fff;display:grid;place-items:center;min-height:100vh;margin:0;padding:16px}
-.box{background:var(--c);border:1px solid rgba(212,175,55,.25);border-radius:14px;padding:28px;width:100%;max-width:380px}
-.logo-img{height:58px;width:auto;max-width:240px;object-fit:contain;display:block;margin:0 auto}
-input{width:100%;height:46px;background:#08090A;border:1px solid var(--b);border-radius:22px;padding:0 16px;color:#fff;outline:none;margin-top:12px;font-size:12px}
-button{width:100%;height:46px;border-radius:22px;border:none;font-weight:900;cursor:pointer;margin-top:14px;background:var(--y);color:#000}
-button:disabled{opacity:.6}
-.link{color:var(--y);font-size:11px;cursor:pointer;text-decoration:underline;margin-top:10px;display:inline-block}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;place-items:center;z-index:99;padding:16px}
+:root{--y:#D4AF37;--bg:#050507;--c:#0E0E10;--b:#1E1F25;--ink:#fff;--muted:#888}
+*{box-sizing:border-box;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--ink);display:grid;place-items:center;min-height:100vh;margin:0;padding:24px}
+.box{background:var(--c);border:1px solid rgba(212,175,55,.25);border-radius:24px;padding:clamp(24px,5vw,38px);width:100%;max-width:420px;box-shadow:0 24px 70px rgba(0,0,0,.55);animation:login-rise .55s both}
+.logo-img{height:64px;width:auto;max-width:250px;object-fit:contain;display:block;margin:0 auto}
+.box h2,.box h3{font-size:24px;font-weight:900;color:var(--ink);margin-bottom:8px}
+input{width:100%;height:50px;background:#08090A;border:1px solid var(--b);border-radius:13px;padding:0 16px;color:var(--ink);outline:none;margin-top:12px;font-size:14px;transition:border-color .2s,box-shadow .2s}
+input::placeholder{color:#888}
+input:focus{border-color:var(--y);box-shadow:0 0 0 3px rgba(212,175,55,.12)}
+button{width:100%;min-height:50px;border-radius:13px;border:none;font-weight:900;cursor:pointer;margin-top:14px;background:var(--y);color:#000;transition:transform .2s,background .2s,box-shadow .2s}
+button:hover:not(:disabled){background:#B8962E;transform:translateY(-1px);box-shadow:0 9px 20px rgba(212,175,55,.2)}
+button:disabled{opacity:.6;cursor:wait}
+button:focus-visible,.link:focus-visible{outline:3px solid rgba(212,175,55,.35);outline-offset:3px}
+.link{color:var(--y);font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;margin-top:12px;display:inline-block}
+.link:hover{text-decoration:underline}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);display:none;place-items:center;z-index:99;padding:16px}
 .modal.show{display:grid}
+.modal .box{max-width:420px}
 .google-btn{background:#fff;color:#000;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid #ddd;margin-top:12px}
-.google-btn img{width:20px}
-.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:#666;font-size:11px}
-.divider::before,.divider::after{content:'';flex:1;height:1px;background:#1E1F25}
+.google-btn:hover:not(:disabled){background:#fff;color:#000;box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.google-btn img{width:20px;height:20px}
+.divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:#666;font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--b)}
+@keyframes login-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:420px){body{padding:16px}.box{border-radius:20px}.box h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
