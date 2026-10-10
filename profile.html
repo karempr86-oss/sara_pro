@@ -34,23 +34,98 @@ body{background:var(--black);color:#fff;padding-bottom:80px}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, collection, query, where, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 const firebaseConfig={apiKey:"AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",authDomain:"hack1-cb0f2.firebaseapp.com",projectId:"hack1-cb0f2",storageBucket:"hack1-cb0f2.firebasestorage.app",messagingSenderId:"926645598259",appId:"1:926645598259:web:eabe7d3f588ee0b26f0b46"};
 const IMGBB_KEY="4db587bdabc9b335c341251460d0d6e2";
 const app=initializeApp(firebaseConfig);const auth=getAuth(app);const db=getFirestore(app);
+
+// === حماية XSS ===
+function esc(s){
+  return String(s || '').replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;'
+  }[m]));
+}
+function safeUrl(u){
+  if(!u) return '';
+  const url = String(u).trim();
+  if(url.startsWith('https://') &&!url.toLowerCase().startsWith('javascript:')) return url;
+  return '';
+}
+
 const qId=new URLSearchParams(location.search).get('id');let currentUser=null;let targetUid=qId;
 const headEl=document.getElementById('head');const gridEl=document.getElementById('grid');
+
 onAuthStateChanged(auth,user=>{currentUser=user;if(!targetUid) targetUid=user?.uid;if(!targetUid){headEl.innerHTML=`مش مسجل دخول <a href="login.html" style="color:var(--gold)">دخول</a>`;return;}loadProfile(targetUid);});
+
 async function uploadToImgBB(file){const fd=new FormData();fd.append("image",file);const res=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:"POST",body:fd});const data=await res.json();if(!data.success) throw new Error("فشل رفع الصورة");return data.data.url;}
-async function loadProfile(uid){try{let name="مستخدم",email="",photo="",isMe=currentUser&&currentUser.uid===uid;if(isMe){name=currentUser.displayName||currentUser.email.split('@')[0];email=currentUser.email;photo=currentUser.photoURL;}else{const q=query(collection(db,"properties"),where("ownerId","==",uid));const snap=await getDocs(q);if(!snap.empty){const f=snap.docs[0].data();name=f.ownerName||name;photo=f.ownerPhoto||"";email=f.ownerEmail||"";}}
-const av=photo||`https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=D4AF37&color=000&size=80`;
-headEl.innerHTML=`<img src="${av}"><div style="flex:1"><h2 style="font-weight:900">${name}</h2><p style="color:#666;font-size:11px">${email}</p>${isMe?`<div class="edit-box"><input id="newName" value="${name}"><button class="btn-gold" id="saveNameBtn"><i class="fa-solid fa-check"></i> حفظ</button></div><label class="btn-o" style="margin-top:10px;width:100%;justify-content:center"><i class="fa-solid fa-camera"></i> تغيير الصورة<input type="file" hidden id="avFile" accept="image/*"></label>`:`<div style="margin-top:10px"><a href="https://wa.me/201038204417" class="btn-gold" style="width:100%;justify-content:center">مراسلة</a></div>`}<div style="margin-top:8px;color:#666;font-size:11px"><b id="pc" style="color:#fff">0</b> عقار في AL TAKRURY</div></div>`;
-if(isMe){document.getElementById('saveNameBtn').addEventListener('click',updateName);document.getElementById('avFile').addEventListener('change',e=>updateAvatar(e.target));}
-const r2=query(collection(db,"properties"),where("ownerId","==",uid));const d2=await getDocs(r2);document.getElementById('cnt').innerText=d2.size;const pcEl=document.getElementById('pc');if(pcEl)pcEl.innerText=d2.size;
-if(d2.empty){gridEl.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#666;padding:30px">لا يوجد عقارات</div>';return;}
-gridEl.innerHTML=d2.docs.map(d=>{const p=d.data();const img=p.imageUrl||'';const title=(p.title||'عقار').substring(0,38);return `<div class="pc" onclick="location.href='details.html?id=${d.id}'"><img src="${img}"><div class="t"><h4>${title}</h4><div style="font-size:10px;color:var(--gold);margin-top:4px">${Number(p.price||0).toLocaleString()} ج.م</div>${isMe?`<button onclick="event.stopPropagation();delProp('${d.id}')" style="margin-top:6px;background:#ff44441a;color:#f55;border:none;padding:5px;border-radius:12px;font-size:9px;width:100%">حذف</button>`:``}</div></div>`;}).join('');
-}catch(e){headEl.innerHTML=`<span style="color:#f55">${e.message}</span>`;}}
-window.updateName=async()=>{const nn=document.getElementById('newName').value.trim();if(!nn) return alert('اكتب الاسم');try{await updateProfile(currentUser,{displayName:nn});const q=query(collection(db,"properties"),where("ownerId","==",currentUser.uid));const snap=await getDocs(q);for(const d of snap.docs) await updateDoc(doc(db,"properties",d.id),{ownerName:nn});alert('✅ تم');location.reload();}catch(e){alert(e.message);}};
-window.updateAvatar=async(inp)=>{if(!inp.files[0]) return;try{const url=await uploadToImgBB(inp.files[0]);await updateProfile(currentUser,{photoURL:url});const q=query(collection(db,"properties"),where("ownerId","==",currentUser.uid));const snap=await getDocs(q);for(const d of snap.docs) await updateDoc(doc(db,"properties",d.id),{ownerPhoto:url});alert('✅ تم');location.reload();}catch(e){alert(e.message);}};
+
+async function loadProfile(uid){
+  try{
+    let name="مستخدم",email="",photo="",isMe=currentUser&&currentUser.uid===uid;
+    if(isMe){name=currentUser.displayName||currentUser.email.split('@')[0];email=currentUser.email;photo=currentUser.photoURL;}
+    else{
+      const q=query(collection(db,"properties"),where("ownerId","==",uid));
+      const snap=await getDocs(q);
+      if(!snap.empty){const f=snap.docs[0].data();name=f.ownerName||name;photo=f.ownerPhoto||"";email=f.ownerEmail||"";}
+    }
+
+    const safeName = esc(name);
+    const safeEmail = esc(email);
+    const avRaw = safeUrl(photo);
+    const av=avRaw || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=D4AF37&color=000&size=80`;
+
+    headEl.innerHTML=`<img src="${esc(av)}"><div style="flex:1"><h2 style="font-weight:900">${safeName}</h2><p style="color:#666;font-size:11px">${safeEmail}</p>${isMe?`<div class="edit-box"><input id="newName" placeholder="الاسم الجديد"><button class="btn-gold" id="saveNameBtn"><i class="fa-solid fa-check"></i> حفظ</button></div><label class="btn-o" style="margin-top:10px;width:100%;justify-content:center"><i class="fa-solid fa-camera"></i> تغيير الصورة<input type="file" hidden id="avFile" accept="image/*"></label>`:`<div style="margin-top:10px"><a href="https://wa.me/201038204417" class="btn-gold" style="width:100%;justify-content:center">مراسلة</a></div>`}<div style="margin-top:8px;color:#666;font-size:11px"><b id="pc" style="color:#fff">0</b> عقار في AL TAKRURY</div></div>`;
+
+    if(isMe){
+      document.getElementById('newName').value = name;
+      document.getElementById('saveNameBtn').addEventListener('click',updateName);
+      document.getElementById('avFile').addEventListener('change',e=>updateAvatar(e.target));
+    }
+
+    const r2=query(collection(db,"properties"),where("ownerId","==",uid));
+    const d2=await getDocs(r2);
+    document.getElementById('cnt').innerText=d2.size;
+    const pcEl=document.getElementById('pc');if(pcEl)pcEl.innerText=d2.size;
+
+    if(d2.empty){gridEl.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#666;padding:30px">لا يوجد عقارات</div>';return;}
+
+    gridEl.innerHTML=d2.docs.map(d=>{
+      const p=d.data();
+      const img=safeUrl(p.imageUrl) || '';
+      const title=esc((p.title||'عقار').substring(0,38));
+      const price=Number(p.price||0).toLocaleString();
+      const safeId=esc(d.id);
+      return `<div class="pc" onclick="location.href='details.html?id=${encodeURIComponent(safeId)}'"><img src="${esc(img)}" loading="lazy"><div class="t"><h4>${title}</h4><div style="font-size:10px;color:var(--gold);margin-top:4px">${esc(price)} ج.م</div>${isMe?`<button onclick="event.stopPropagation();delProp('${safeId}')" style="margin-top:6px;background:#ff44441a;color:#f55;border:none;padding:5px;border-radius:12px;font-size:9px;width:100%">حذف</button>`:``}</div></div>`;
+    }).join('');
+  }catch(e){headEl.innerHTML=`<span style="color:#f55">${esc(e.message)}</span>`;}
+}
+
+window.updateName=async()=>{
+  const input=document.getElementById('newName');
+  const nn=input.value.trim();
+  if(!nn) return alert('اكتب الاسم');
+  if(/[<>]/.test(nn)) return alert('الاسم ممنوع يحتوي على < أو >');
+  try{
+    await updateProfile(currentUser,{displayName:nn});
+    const q=query(collection(db,"properties"),where("ownerId","==",currentUser.uid));
+    const snap=await getDocs(q);
+    for(const d of snap.docs) await updateDoc(doc(db,"properties",d.id),{ownerName:nn});
+    alert('✅ تم');location.reload();
+  }catch(e){alert(esc(e.message));}
+};
+
+window.updateAvatar=async(inp)=>{
+  if(!inp.files[0]) return;
+  try{
+    const url=await uploadToImgBB(inp.files[0]);
+    await updateProfile(currentUser,{photoURL:url});
+    const q=query(collection(db,"properties"),where("ownerId","==",currentUser.uid));
+    const snap=await getDocs(q);
+    for(const d of snap.docs) await updateDoc(doc(db,"properties",d.id),{ownerPhoto:url});
+    alert('✅ تم');location.reload();
+  }catch(e){alert(esc(e.message));}
+};
+
 window.delProp=async(id)=>{if(!confirm('تمسح؟')) return;await deleteDoc(doc(db,"properties",id));location.reload();};
 window.logout=async()=>{await signOut(auth);localStorage.clear();location.href='index.html';};
 </script>
