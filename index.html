@@ -536,7 +536,7 @@ window.render=function(list,hasFilters=false){
   updateGrid(cards);
   preparePropertyAnimations(grid);
 }
-onAuthStateChanged(auth,user=>{if(user){document.getElementById('authArea').innerHTML=`<a href="profile.html" class="btn-o">${user.displayName||'حسابي'}</a><a href="add-property.html" class="btn-gold" style="margin-right:6px">+ إضافة</a>`;}});
+onAuthStateChanged(auth,async user=>{if(!user)return;let admin=false;try{admin=(await user.getIdTokenResult()).claims.admin===true;}catch(e){console.error(e);}document.getElementById('authArea').innerHTML=`<a href="profile.html" class="btn-o">${user.displayName||'حسابي'}</a>${admin?'<a href="admin.html" class="btn-gold" style="margin-right:6px">لوحة الإدارة</a>':''}`;});
 fetchProperties();
 const menuToggle=document.getElementById('menuToggle');
 const siteNav=document.getElementById('siteNav');
