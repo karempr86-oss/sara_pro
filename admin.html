@@ -1,106 +1,12 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-:root{--yellow:#FFD400;--bg:#08080A;--card:#141416}
-*{font-family:'Cairo',sans-serif;box-sizing:border-box}
-body{background:var(--bg);color:#fff;margin:0;padding:20px;max-width:900px;margin:auto}
-input,select,textarea{padding:12px;background:#1f1f1f;border:1px solid #333;border-radius:8px;color:#fff;width:100%;margin:5px 0}
-textarea{height:80px}
-.btn-yellow{background:var(--yellow);color:#000;font-weight:800;border:none;padding:12px;border-radius:8px;cursor:pointer}
-.card{background:var(--card);border:1px solid #222;border-radius:12px;padding:12px;display:flex;gap:12px;margin-bottom:10px}
-.card img{width:90px;height:70px;object-fit:cover;border-radius:8px}
-</style>
-</head>
-<body>
-<div style="display:flex;justify-content:space-between;align-items:center">
-<h2 style="color:var(--yellow)">🏠 لوحة التحكم - بدون باسورد</h2>
-<a href="index.html" style="background:#222;color:#fff;border:1px solid #333;padding:8px 12px;border-radius:8px;text-decoration:none">⬅️ رجوع للرئيسية</a>
-</div>
-
-<div style="background:#141416;padding:20px;border-radius:14px;margin:20px 0;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<input id="title" placeholder="عنوان العقار" style="grid-column:1/-1">
-<select id="city"><option>القاهرة</option><option>الشيخ زايد</option><option>6 أكتوبر</option><option>الاسكندرية</option><option>المنصورة</option></select>
-<select id="deal"><option value="للبيع">للبيع</option><option value="للإيجار">للإيجار</option></select>
-<input id="price" type="number" placeholder="السعر">
-<input id="area" type="number" placeholder="المساحة م²">
-<input id="bedrooms" type="number" placeholder="عدد الغرف">
-<input id="bathrooms" type="number" placeholder="حمامات">
-<input id="phone" placeholder="رقم الواتساب" style="grid-column:1/-1">
-<textarea id="description" placeholder="وصف العقار..." style="grid-column:1/-1"></textarea>
-<input type="file" id="image" accept="image/*" style="grid-column:1/-1">
-<button class="btn-yellow" style="grid-column:1/-1" onclick="add()" id="addBtn">🚀 نشر العقار</button>
-</div>
-
-<div style="display:flex;justify-content:space-between;margin-bottom:10px">
-<span id="total" style="color:var(--yellow)"></span>
-<button onclick="load()" style="background:#222;color:#fff;border:1px solid #333;padding:6px 10px;border-radius:8px;font-size:12px">🔄 تحديث</button>
-</div>
-
-<div id="list"></div>
-
-<script>
-// نفس مكان تخزين الاندكس
-let all = JSON.parse(localStorage.getItem('aqar_properties') || '[]');
-let fileBase64 = null;
-
-document.getElementById('image').addEventListener('change', e=>{
-  const f=e.target.files[0];
-  if(!f) return;
-  const reader=new FileReader();
-  reader.onload=ev=> fileBase64=ev.target.result;
-  reader.readAsDataURL(f);
-});
-
-function save(){ localStorage.setItem('aqar_properties', JSON.stringify(all)); }
-
-window.add = ()=>{
-  const title=document.getElementById('title').value.trim();
-  if(!title){alert('اكتب العنوان'); return;}
-  const prop={
-    id: Date.now().toString(),
-    title: title,
-    city: document.getElementById('city').value,
-    deal: document.getElementById('deal').value,
-    price: document.getElementById('price').value,
-    area: document.getElementById('area').value,
-    bedrooms: document.getElementById('bedrooms').value,
-    bathrooms: document.getElementById('bathrooms').value,
-    phone: document.getElementById('phone').value,
-    description: document.getElementById('description').value,
-    main_image: fileBase64 || `https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&random=${Date.now()}`,
-    ownerName: 'الادمن',
-    created: new Date().toISOString()
-  };
-  all.unshift(prop);
-  save();
-  alert('✅ تم النشر وهيظهر في index.html');
-  document.getElementById('title').value=''; document.getElementById('price').value=''; document.getElementById('area').value=''; document.getElementById('bedrooms').value=''; document.getElementById('bathrooms').value=''; document.getElementById('phone').value=''; document.getElementById('description').value=''; document.getElementById('image').value=''; fileBase64=null;
-  load();
-};
-
-window.load = ()=>{
-  all = JSON.parse(localStorage.getItem('aqar_properties') || '[]');
-  document.getElementById('total').innerText=`إجمالي العقارات: ${all.length}`;
-  const list=document.getElementById('list');
-  if(!all.length){list.innerHTML='<p style="color:#888;text-align:center">مفيش عقارات</p>'; return;}
-  list.innerHTML=all.map(p=>{
-    const img=p.main_image||'https://via.placeholder.com/90';
-    return `<div class="card"><img src="${img}"><div style="flex:1"><b>${p.title}</b><br><small style="color:#888">${p.city} - ${p.price}ج - ${p.area||0}م² - ${p.bedrooms||0}غرف<br>${(p.description||'').slice(0,80)}</small><div style="margin-top:6px;display:flex;gap:6px"><button onclick="del('${p.id}')" style="background:#f44;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer">حذف من الموقع</button><a href="details.html?id=${p.id}" target="_blank" style="background:#333;color:#fff;padding:5px 10px;border-radius:6px;text-decoration:none">معاينة</a></div></div></div>`;
-  }).join('');
-};
-
-window.del = (id)=>{
-  if(!confirm('هتمسح العقار ده نهائي من index.html؟')) return;
-  all=all.filter(p=>p.id!=id);
-  save();
-  load();
-};
-
-load();
-</script>
-</body>
-</html>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>إدارة العقارات</title><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box;font-family:Cairo,sans-serif}body{margin:0;background:#08080a;color:#fff;padding:20px;max-width:1000px;margin:auto}input,textarea{width:100%;padding:11px;margin:5px 0;background:#19191d;border:1px solid #333;border-radius:8px;color:#fff}button,.btn{background:#d4af37;color:#000;font-weight:900;border:0;border-radius:8px;padding:11px 16px;cursor:pointer;text-decoration:none}.card{background:#141416;border:1px solid #292929;border-radius:12px;padding:12px;display:flex;gap:12px;margin:10px 0;align-items:center}.card img{width:100px;height:75px;object-fit:cover;border-radius:8px}.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{background:#a22;color:white}.muted{color:#aaa}
+</style></head><body><header style="display:flex;justify-content:space-between"><h2 style="color:#d4af37">لوحة إدارة العقارات</h2><a class="btn" href="index.html">الرئيسية</a></header><p id="status" class="muted">جارٍ التحقق...</p><section id="panel" hidden><h3>إضافة / تعديل عقار</h3><input id="pid" type="hidden"><input id="title" placeholder="عنوان العقار"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px"><input id="city" placeholder="المدينة"><input id="price" type="number" placeholder="السعر"><input id="area" type="number" placeholder="المساحة"><input id="bedrooms" type="number" placeholder="الغرف"><input id="bathrooms" type="number" placeholder="الحمامات"><input id="phone" placeholder="الهاتف"><input id="type" placeholder="النوع"><input id="deal" placeholder="للبيع / للإيجار"><input id="imageUrl" placeholder="رابط الصورة HTTPS"></div><textarea id="desc" placeholder="الوصف"></textarea><div class="actions"><button id="save">حفظ العقار</button><button id="clear">تفريغ</button><button id="logout">تسجيل الخروج</button></div><h3>العقارات المنشورة</h3><div id="list"></div></section>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";import{getAuth,onAuthStateChanged,signOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";import{getFirestore,collection,addDoc,getDocs,doc,updateDoc,deleteDoc,serverTimestamp,query,orderBy}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const config={apiKey:"AIzaSyDy6eUDmAAdSN9aYq6kbcBPVvIRqhPmz50",authDomain:"hack1-cb0f2.firebaseapp.com",projectId:"hack1-cb0f2",storageBucket:"hack1-cb0f2.firebasestorage.app",messagingSenderId:"926645598259",appId:"1:926645598259:web:eabe7d3f588ee0b26f0b46"};const app=initializeApp(config),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);let manager=null;
+onAuthStateChanged(auth,async user=>{if(!user){$('status').textContent='سجّل الدخول بحساب المدير أولاً.';location.href='login.html';return;}try{const claims=await user.getIdTokenResult(true);if(claims.claims.admin!==true){$('status').textContent='مرفوض: هذا الحساب ليس مديراً.';return;}manager=user;$('status').textContent='تم التحقق من المدير.';$('panel').hidden=false;await load();}catch(e){$('status').textContent='فشل التحقق: '+e.message;}});
+function clearForm(){['pid','title','city','price','area','bedrooms','bathrooms','phone','type','deal','imageUrl','desc'].forEach(k=>$(k).value='');}$('clear').onclick=clearForm;
+$('save').onclick=async()=>{if(!manager)return alert('غير مصرح');const title=$('title').value.trim();if(!title)return alert('اكتب عنوان العقار');const data={title,city:$('city').value.trim(),price:Number($('price').value||0),area:Number($('area').value||0),bedrooms:Number($('bedrooms').value||0),bathrooms:Number($('bathrooms').value||0),phone:$('phone').value.trim(),type:$('type').value.trim(),deal:$('deal').value.trim()||'للبيع',imageUrl:$('imageUrl').value.trim(),desc:$('desc').value.trim(),updatedAt:serverTimestamp()};try{if($('pid').value)await updateDoc(doc(db,'properties',$('pid').value),data);else await addDoc(collection(db,'properties'),{...data,ownerId:manager.uid,ownerName:manager.displayName||manager.email,ownerEmail:manager.email||'',ownerPhoto:manager.photoURL||'',createdAt:serverTimestamp()});clearForm();await load();alert('تم الحفظ في Firestore');}catch(e){alert('فشل الحفظ: '+e.message);}};
+async function load(){const snap=await getDocs(query(collection(db,'properties'),orderBy('createdAt','desc')));$('list').replaceChildren();snap.forEach(d=>{const p=d.data(),el=document.createElement('div');el.className='card';const im=document.createElement('img');im.src=p.imageUrl||'';const body=document.createElement('div');body.style.flex='1';const title=document.createElement('b');title.textContent=p.title||'عقار';const info=document.createElement('p');info.className='muted';info.textContent=(p.city||'')+' · '+(p.price||0)+' ج.م';const actions=document.createElement('div');actions.className='actions';const edit=document.createElement('button');edit.textContent='تعديل';edit.onclick=()=>{ $('pid').value=d.id;['title','city','price','area','bedrooms','bathrooms','phone','type','deal','imageUrl','desc'].forEach(k=>$(k).value=p[k]??'');window.scrollTo({top:0,behavior:'smooth'});};const del=document.createElement('button');del.className='danger';del.textContent='حذف';del.onclick=async()=>{if(confirm('تأكيد الحذف؟'))try{await deleteDoc(doc(db,'properties',d.id));await load();}catch(e){alert(e.message);}};actions.append(edit,del);body.append(title,info,actions);el.append(im,body);$('list').append(el);});}
+$('logout').onclick=()=>signOut(auth).then(()=>location.href='login.html');
+</script></section></body></html>
